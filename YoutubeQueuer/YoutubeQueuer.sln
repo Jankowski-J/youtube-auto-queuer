@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeQueuer.Web", "YoutubeQueuer.Web\YoutubeQueuer.Web.csproj", "{284AD0B3-FB54-435F-819F-5FBB03100BDA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeQueuer.Lib", "YoutubeQueuer.Lib\YoutubeQueuer.Lib.csproj", "{47930087-0712-4749-AC7E-03B860BED9E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{284AD0B3-FB54-435F-819F-5FBB03100BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{284AD0B3-FB54-435F-819F-5FBB03100BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{284AD0B3-FB54-435F-819F-5FBB03100BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47930087-0712-4749-AC7E-03B860BED9E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47930087-0712-4749-AC7E-03B860BED9E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47930087-0712-4749-AC7E-03B860BED9E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47930087-0712-4749-AC7E-03B860BED9E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

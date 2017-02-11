@@ -2,3 +2,12 @@
 /YoutubeQueuer.Web/YoutubeQueuer.Web/bin
 /YoutubeQueuer.Web/packages
 /YoutubeQueuer.Web/.vs/YoutubeQueuer.Web/v14/*.suo
+/YoutubeQueuer.Web/YoutubeQueuer.Web/google_account_settings.json
+/YoutubeQueuer/YoutubeQueuer.Lib/obj
+/YoutubeQueuer/YoutubeQueuer.Lib/bin
+/YoutubeQueuer/packages
+/YoutubeQueuer/.vs/YoutubeQueuer.Web/v14/*.suo
+/YoutubeQueuer/YoutubeQueuer.Web/obj
+/YoutubeQueuer/YoutubeQueuer.Web/bin
+/YoutubeQueuer/YoutubeQueuer.Web/google_account_settings.json
+/YoutubeQueuer/YoutubeQueuer.Web/*.user
