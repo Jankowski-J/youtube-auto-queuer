@@ -11,3 +11,5 @@
 /YoutubeQueuer/YoutubeQueuer.Web/bin
 /YoutubeQueuer/YoutubeQueuer.Web/google_account_settings.json
 /YoutubeQueuer/YoutubeQueuer.Web/*.user
+/YoutubeQueuer/YoutubeQueuer.Web/client_secrets.json
+/YoutubeQueuer/.vs/YoutubeQueuer/v14/*.suo

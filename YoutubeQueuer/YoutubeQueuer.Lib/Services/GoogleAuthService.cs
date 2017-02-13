@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using YoutubeQueuer.Lib.Models;
 using YoutubeQueuer.Lib.Services.Abstract;
@@ -12,6 +14,7 @@ namespace YoutubeQueuer.Lib.Services
     public class GoogleAuthService : IGoogleAuthService
     {
         private string _token;
+        private static UserCredential _credential;
 
         public async Task<string> GetAuthorizationTokenForApp(Stream serializedSettings, GoogleAuthorizationScope scope)
         {
@@ -39,16 +42,20 @@ namespace YoutubeQueuer.Lib.Services
 
         public async Task<IEnumerable<string>> GetUserSubscriptions(string userName)
         {
-            var youtubeService = new YouTubeService();
+            var youtube = new YouTubeService(new BaseClientService.Initializer()
+            {
+                ApplicationName = "YtTestApp",
+                HttpClientInitializer = _credential
+            });
 
-            var parts = "id,snippet";
-            var channelsRequest = youtubeService.Channels.List(parts);
-            channelsRequest.Mine = true;
+            var parts = "id,snippet,contentDetails,brandingSettings";
+            var channelsRequest = youtube.Channels.List(parts);
+            channelsRequest.ForUsername = userName;
             channelsRequest.OauthToken = _token;
 
             var channels = await channelsRequest.ExecuteAsync();
 
-            var subsRequest = youtubeService.Subscriptions.List(parts);
+            var subsRequest = youtube.Subscriptions.List(parts);
             
             subsRequest.ChannelId = channels.Items.First().Id;
             subsRequest.OauthToken = _token;
@@ -56,6 +63,24 @@ namespace YoutubeQueuer.Lib.Services
             var subs = await subsRequest.ExecuteAsync();
 
             return subs.Items.Select(x => x.Snippet.ChannelId).ToList();
+        }
+
+        public async Task AuthorizeUser(string userName, string secrets, Stream stream)
+        {
+            var secretAlt = GoogleClientSecrets.Load(stream).Secrets;
+
+            _credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(secretAlt
+                , new List<string>
+                {
+                    YouTubeService.Scope.Youtube,
+                    YouTubeService.Scope.YoutubeForceSsl
+                }, "user", CancellationToken.None,
+                new Google.Apis.Util.Store.FileDataStore(GetType().ToString()));
+        }
+
+        public string GetAuthorizedUserId()
+        {
+            return _credential.UserId;
         }
     }
 }
