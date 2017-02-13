@@ -1,11 +1,13 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using YoutubeQueuer.Lib.Models;
 
 namespace YoutubeQueuer.Lib.Services.Abstract
 {
     public interface IGoogleAuthService
     {
-        Task<string> GetAuthorizationTokenForApp(Stream serializedSettings, GoogleAuthorizationScope scope);
+        Task<IEnumerable<string>> GetUserSubscriptions(string userName);
+        Task AuthorizeUser(string userName, Stream stream);
+        string GetAuthorizedUserId();
     }
 }
