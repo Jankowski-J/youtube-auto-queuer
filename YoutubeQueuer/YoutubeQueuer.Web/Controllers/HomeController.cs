@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using YoutubeQueuer.Lib.Models;
 using YoutubeQueuer.Lib.Services;
 using YoutubeQueuer.Web.Settings;
 
@@ -15,10 +14,7 @@ namespace YoutubeQueuer.Web.Controllers
 
         public async Task<ActionResult> About()
         {
-            var settingsProvider = new GoogleSettingsProvider();
             var authService = new GoogleAuthService();
-            await authService.GetAuthorizationTokenForApp(settingsProvider.GetSerializedSettings(),
-                GoogleAuthorizationScope.Youtube);
 
             await authService.GetUserSubscriptions(authService.GetAuthorizedUserId());
             ViewBag.Message = "Your application description page.";
