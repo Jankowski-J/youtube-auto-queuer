@@ -48,24 +48,25 @@ namespace YoutubeQueuer.Lib.Services
                 HttpClientInitializer = _credential
             });
 
-            var parts = "id,snippet,contentDetails,brandingSettings";
+            var parts = "id,snippet,contentDetails";
             var channelsRequest = youtube.Channels.List(parts);
-            channelsRequest.ForUsername = userName;
+            channelsRequest.Mine = true;
             channelsRequest.OauthToken = _token;
 
             var channels = await channelsRequest.ExecuteAsync();
 
             var subsRequest = youtube.Subscriptions.List(parts);
-            
+
             subsRequest.ChannelId = channels.Items.First().Id;
             subsRequest.OauthToken = _token;
+            subsRequest.MaxResults = 50;
 
             var subs = await subsRequest.ExecuteAsync();
 
             return subs.Items.Select(x => x.Snippet.ChannelId).ToList();
         }
 
-        public async Task AuthorizeUser(string userName, string secrets, Stream stream)
+        public async Task AuthorizeUser(string userName, Stream stream)
         {
             var secretAlt = GoogleClientSecrets.Load(stream).Secrets;
 

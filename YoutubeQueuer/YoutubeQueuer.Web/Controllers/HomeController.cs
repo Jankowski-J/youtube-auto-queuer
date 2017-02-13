@@ -37,7 +37,7 @@ namespace YoutubeQueuer.Web.Controllers
         {
             var authService = new GoogleAuthService();
             var stream = new GoogleSettingsProvider().GetSecretsStream();
-            await authService.AuthorizeUser(userName, "aa", stream);
+            await authService.AuthorizeUser(userName, stream);
 
             return View("Index");
         }
