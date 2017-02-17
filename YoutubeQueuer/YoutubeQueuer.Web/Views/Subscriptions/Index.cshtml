@@ -1,0 +1,23 @@
+﻿@model IEnumerable<YoutubeQueuer.Web.Models.SubscriptionModel>
+
+@{
+    ViewBag.Title = "Subscriptions list";
+}
+
+<h2>View</h2>
+
+<table class="table">
+    <tr>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.ChannelName
+        </td>
+        <td>Id: @item.ChannelId</td>
+    </tr>
+}
+
+</table>
