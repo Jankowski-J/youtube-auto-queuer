@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using Google.Apis.Auth.OAuth2;
 
 namespace YoutubeQueuer.Lib.Services.Abstract
 {
     public interface IGoogleAuthService
     {
-        Task<IEnumerable<string>> GetUserSubscriptions(string userName);
-        Task AuthorizeUser(string userName, Stream stream);
-        string GetAuthorizedUserId();
+        Task<UserCredential> AuthorizeUser(Stream stream);
     }
 }

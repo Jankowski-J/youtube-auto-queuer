@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.3.0\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis, Version=1.21.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.21.0\lib\net45\Google.Apis.dll</HintPath>
       <Private>True</Private>
@@ -73,10 +77,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\GoogleAuthorizationScope.cs" />
+    <Compile Include="Infrastructure\QueuerLibAutofacModule.cs" />
+    <Compile Include="Models\YoutubeSubscriptionModel.cs" />
     <Compile Include="Services\Abstract\IGoogleAuthService.cs" />
+    <Compile Include="Services\Abstract\IYoutubeSubscriptionsService.cs" />
     <Compile Include="Services\GoogleAuthService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\YoutubeSubscriptionsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

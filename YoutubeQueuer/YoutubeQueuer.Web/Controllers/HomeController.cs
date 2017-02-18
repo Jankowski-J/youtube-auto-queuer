@@ -1,22 +1,27 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using YoutubeQueuer.Lib.Services;
+using YoutubeQueuer.Lib.Services.Abstract;
+using YoutubeQueuer.Web.Extensions;
 using YoutubeQueuer.Web.Settings;
 
 namespace YoutubeQueuer.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IGoogleAuthService _googleAuthService;
+
+        public HomeController(IGoogleAuthService googleAuthService)
+        {
+            _googleAuthService = googleAuthService;
+        }
+
         public ActionResult Index()
         {
             return View();
         }
 
-        public async Task<ActionResult> About()
+        public ActionResult About()
         {
-            var authService = new GoogleAuthService();
-
-            await authService.GetUserSubscriptions(authService.GetAuthorizedUserId());
             ViewBag.Message = "Your application description page.";
 
             return View();
@@ -29,11 +34,12 @@ namespace YoutubeQueuer.Web.Controllers
             return View();
         }
 
-        public async Task<ActionResult> Authorize(string userName)
+        public async Task<ActionResult> Authorize()
         {
-            var authService = new GoogleAuthService();
             var stream = new GoogleSettingsProvider().GetSecretsStream();
-            await authService.AuthorizeUser(userName, stream);
+            var credential = await _googleAuthService.AuthorizeUser(stream);
+
+            this.SetSessionCredential(credential);
 
             return View("Index");
         }
