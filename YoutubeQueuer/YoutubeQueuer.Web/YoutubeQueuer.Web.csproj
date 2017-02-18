@@ -234,6 +234,8 @@
     <Compile Include="Controllers\PlaylistsController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
+    <Compile Include="Filters\AuthorizeYoutubeAttribute.cs" />
+    <Compile Include="Filters\AuthorizeYoutubeFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -2,10 +2,12 @@
 using System.Web.Mvc;
 using YoutubeQueuer.Lib.Services.Abstract;
 using YoutubeQueuer.Web.Extensions;
+using YoutubeQueuer.Web.Filters;
 using YoutubeQueuer.Web.Models;
 
 namespace YoutubeQueuer.Web.Controllers
 {
+    [AuthorizeYoutube]
     public class PlaylistsController : Controller
     {
         private readonly IYoutubePlaylistsService _playlistsService;
@@ -15,7 +17,7 @@ namespace YoutubeQueuer.Web.Controllers
             _playlistsService = playlistsService;
         }
 
-        // GET: Playlists
+        [AuthorizeYoutube]
         public ActionResult Index()
         {
             var playlists = _playlistsService.GetUserPlaylists(this.GetSessionCredential());

@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using YoutubeQueuer.Lib.Services.Abstract;
 using YoutubeQueuer.Web.Extensions;
+using YoutubeQueuer.Web.Filters;
 using YoutubeQueuer.Web.Models;
 
 namespace YoutubeQueuer.Web.Controllers
 {
+    [AuthorizeYoutube]
     public class SubscriptionsController : Controller
     {
         private readonly IYoutubeSubscriptionsService _youtubeSubscriptionsService;
