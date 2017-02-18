@@ -1,0 +1,25 @@
+﻿@model IEnumerable<YoutubeQueuer.Web.Models.PlaylistViewModel>
+
+@{
+    ViewBag.Title = "Playlists";
+}
+
+<h2>Playlists</h2>
+
+<table class="table">
+    <tr>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @item.Name
+        </td>
+        <td>
+            <a href="@item.Url">Go to playlist</a>
+        </td>
+    </tr>
+}
+
+</table>

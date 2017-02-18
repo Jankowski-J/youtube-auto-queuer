@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using YoutubeQueuer.Lib.Providers;
 using YoutubeQueuer.Lib.Services;
 
 namespace YoutubeQueuer.Lib.Infrastructure
@@ -7,9 +8,16 @@ namespace YoutubeQueuer.Lib.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<YoutubeServiceProvider>().AsImplementedInterfaces();
+            RegisterServices(builder);
+            base.Load(builder);
+        }
+
+        private static void RegisterServices(ContainerBuilder builder)
+        {
             builder.RegisterType<GoogleAuthService>().AsImplementedInterfaces();
             builder.RegisterType<YoutubeSubscriptionsService>().AsImplementedInterfaces();
-            base.Load(builder);
+            builder.RegisterType<YoutubePlaylistsService>().AsImplementedInterfaces();
         }
     }
 }

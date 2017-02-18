@@ -231,6 +231,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PlaylistsController.cs" />
     <Compile Include="Controllers\SubscriptionsController.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Global.asax.cs">
@@ -239,6 +240,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\PlaylistViewModel.cs" />
     <Compile Include="Models\SubscriptionListViewModel.cs" />
     <Compile Include="Models\SubscriptionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -304,6 +306,7 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Subscriptions\Index.cshtml" />
+    <Content Include="Views\Playlists\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
