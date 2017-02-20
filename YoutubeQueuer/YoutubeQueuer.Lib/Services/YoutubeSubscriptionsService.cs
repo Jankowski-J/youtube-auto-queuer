@@ -6,19 +6,23 @@ using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YoutubeQueuer.Lib.Models;
+using YoutubeQueuer.Lib.Providers.Abstract;
 using YoutubeQueuer.Lib.Services.Abstract;
 
 namespace YoutubeQueuer.Lib.Services
 {
     internal class YoutubeSubscriptionsService : IYoutubeSubscriptionsService
     {
+        private readonly IYoutubeServiceProvider _youtubeServiceProvider;
+
+        public YoutubeSubscriptionsService(IYoutubeServiceProvider youtubeServiceProvider)
+        {
+            _youtubeServiceProvider = youtubeServiceProvider;
+        }
+
         public async Task<IEnumerable<YoutubeSubscriptionModel>> GetUserSubscriptions(UserCredential credential)
         {
-            var youtube = new YouTubeService(new BaseClientService.Initializer
-            {
-                ApplicationName = "YtTestApp",
-                HttpClientInitializer = credential
-            });
+            var youtube = _youtubeServiceProvider.GetYoutubeService(credential);
 
             const string parts = "id,snippet,contentDetails";
             var channels = await GetChannels(credential, youtube, parts);

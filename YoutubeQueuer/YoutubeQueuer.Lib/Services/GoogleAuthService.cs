@@ -13,13 +13,16 @@ namespace YoutubeQueuer.Lib.Services
        public async Task<UserCredential> AuthorizeUser(Stream stream)
         {
             var secrets = GoogleClientSecrets.Load(stream).Secrets;
-            return await GoogleWebAuthorizationBroker.AuthorizeAsync(secrets,
+
+            var task = GoogleWebAuthorizationBroker.AuthorizeAsync(secrets,
                 new List<string>
                 {
                     YouTubeService.Scope.Youtube,
                     YouTubeService.Scope.YoutubeForceSsl
                 }, "user", CancellationToken.None,
                 new Google.Apis.Util.Store.FileDataStore(GetType().ToString()), new LocalServerCodeReceiver());
+            //task.RunSynchronously();
+            return await task;
         }
     }
 }
