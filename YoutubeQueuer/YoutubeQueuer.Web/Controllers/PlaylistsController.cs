@@ -7,7 +7,6 @@ using YoutubeQueuer.Web.Models;
 
 namespace YoutubeQueuer.Web.Controllers
 {
-    [AuthorizeYoutube]
     public class PlaylistsController : Controller
     {
         private readonly IYoutubePlaylistsService _playlistsService;
