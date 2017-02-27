@@ -26,10 +26,6 @@ namespace YoutubeQueuer.Web.Filters
 
             var secrets = new GoogleSettingsProvider().GetSecretsStream();
             var task = _googleAuthService.AuthorizeUser(secrets);
-            if (!task.IsCompleted)
-            {
-                task.RunSynchronously();
-            }
 
             filterContext.HttpContext.Session["Credentials"] = task.Result;
         }

@@ -27,6 +27,7 @@ namespace YoutubeQueuer.Web
             builder.RegisterModule<QueuerLibAutofacModule>();
             builder.RegisterType<AuthorizeYoutubeFilter>().AsActionFilterFor<PlaylistsController>()
                  .InstancePerRequest();
+            builder.RegisterType<AuthorizeYoutubeFilter>().AsActionFilterFor<SubscriptionsController>();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 
             var container = builder.Build();
