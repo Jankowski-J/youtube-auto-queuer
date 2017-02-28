@@ -1,4 +1,4 @@
-﻿@model IEnumerable<YoutubeQueuer.Web.Models.SubscriptionModel>
+﻿@model IEnumerable<YoutubeQueuer.Web.Models.YoutubeSubscriptionWebModel>
 
 @{
     ViewBag.Title = "Subscriptions list";
@@ -11,13 +11,20 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @item.ChannelName
-        </td>
-        <td>Id: @item.ChannelId</td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.ChannelName
+            </td>
+            <td>Id: @item.ChannelId</td>
+            <td>
+                <a href="http://youtube.com/watch?v=@item.LatestVideo.Id">
+                    @item.LatestVideo.Name
+                </a>
+            </td>
+            <td>@item.LatestVideo.PublishedAt</td>
+        </tr>
+    }
 
 </table>

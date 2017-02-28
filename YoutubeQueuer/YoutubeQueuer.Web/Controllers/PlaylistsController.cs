@@ -21,7 +21,7 @@ namespace YoutubeQueuer.Web.Controllers
         {
             var playlists = _playlistsService.GetUserPlaylists(this.GetSessionCredential());
 
-            var mapped = playlists.Select(x => new PlaylistViewModel
+            var mapped = playlists.Select(x => new PlaylistWebModel
             {
                 Url = $"https://www.youtube.com/playlist?list={x.Id}",
                 Name = x.Name

@@ -80,15 +80,18 @@
     <Compile Include="Infrastructure\QueuerLibAutofacModule.cs" />
     <Compile Include="Models\YoutubePlaylistModel.cs" />
     <Compile Include="Models\YoutubeSubscriptionModel.cs" />
+    <Compile Include="Models\YoutubeVideoModel.cs" />
     <Compile Include="Providers\Abstract\IYoutubeServiceProvider.cs" />
     <Compile Include="Providers\YoutubeServiceProvider.cs" />
     <Compile Include="Services\Abstract\IGoogleAuthService.cs" />
     <Compile Include="Services\Abstract\IYoutubePlaylistsService.cs" />
     <Compile Include="Services\Abstract\IYoutubeSubscriptionsService.cs" />
+    <Compile Include="Services\Abstract\IYoutubeVideosService.cs" />
     <Compile Include="Services\GoogleAuthService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\YoutubePlaylistsService.cs" />
     <Compile Include="Services\YoutubeSubscriptionsService.cs" />
+    <Compile Include="Services\YoutubeVideosService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

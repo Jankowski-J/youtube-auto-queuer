@@ -18,6 +18,7 @@ namespace YoutubeQueuer.Lib.Infrastructure
             builder.RegisterType<GoogleAuthService>().AsImplementedInterfaces();
             builder.RegisterType<YoutubeSubscriptionsService>().AsImplementedInterfaces();
             builder.RegisterType<YoutubePlaylistsService>().AsImplementedInterfaces();
+            builder.RegisterType<YoutubeVideosService>().AsImplementedInterfaces();
         }
     }
 }

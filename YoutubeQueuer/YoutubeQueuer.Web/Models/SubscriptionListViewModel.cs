@@ -4,6 +4,6 @@ namespace YoutubeQueuer.Web.Models
 {
     public class SubscriptionListViewModel
     {
-        public IEnumerable<SubscriptionModel> Subscriptions { get; set; }
+        public IEnumerable<YoutubeSubscriptionWebModel> Subscriptions { get; set; }
     }
 }
