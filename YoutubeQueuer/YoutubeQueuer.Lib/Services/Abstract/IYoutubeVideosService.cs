@@ -7,6 +7,6 @@ namespace YoutubeQueuer.Lib.Services.Abstract
 {
     public interface IYoutubeVideosService
     {
-        IEnumerable<YoutubeVideoModel> GetLatestVideosFromChannel(UserCredential credential, string channelId, DateTime startDate);
+        IEnumerable<YoutubeVideoModel> GetLatestVideosFromChannel(string channelId, DateTime startDate, UserCredential credential);
     }
 }

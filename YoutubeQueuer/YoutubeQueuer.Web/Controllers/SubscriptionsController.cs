@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using YoutubeQueuer.Lib.Models;
 using YoutubeQueuer.Lib.Services.Abstract;
@@ -23,9 +22,9 @@ namespace YoutubeQueuer.Web.Controllers
         }
 
         [AuthorizeYoutube]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            var subscriptions = (await _youtubeSubscriptionsService.GetUserSubscriptions(this.GetSessionCredential())).ToList();
+            var subscriptions = _youtubeSubscriptionsService.GetUserSubscriptions(this.GetSessionCredential()).ToList();
 
             return View(subscriptions.Select(ToSubscriptionWebModel));
         }
@@ -33,18 +32,20 @@ namespace YoutubeQueuer.Web.Controllers
         private YoutubeSubscriptionWebModel ToSubscriptionWebModel(YoutubeSubscriptionModel model)
         {
             var latestVideo =
-                _youtubeVideosService.GetLatestVideosFromChannel(this.GetSessionCredential(), model.ChannelId, DateTime.Now)
-                    .First();
+                _youtubeVideosService.GetLatestVideosFromChannel(model.ChannelId, DateTime.Now.Date, this.GetSessionCredential())
+                    .FirstOrDefault();
             return new YoutubeSubscriptionWebModel
             {
                 ChannelId = model.ChannelId,
                 ChannelName = model.ChannelName,
-                LatestVideo = new YoutubeVideoWebModel
-                {
-                    Id = latestVideo.Id,
-                    Name = latestVideo.Name,
-                    PublishedAt = latestVideo.PublishedAt
-                }
+                LatestVideo = latestVideo != null
+                    ? new YoutubeVideoWebModel
+                    {
+                        Id = latestVideo.Id,
+                        Name = latestVideo.Name,
+                        PublishedAt = latestVideo.PublishedAt
+                    }
+                    : null
             };
         }
     }

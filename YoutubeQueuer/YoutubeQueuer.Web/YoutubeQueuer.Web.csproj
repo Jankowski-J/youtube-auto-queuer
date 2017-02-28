@@ -242,7 +242,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\PlaylistWebModel.cs" />
+    <Compile Include="Models\YoutubePlaylistWebModel.cs" />
     <Compile Include="Models\SubscriptionListViewModel.cs" />
     <Compile Include="Models\YoutubeSubscriptionWebModel.cs" />
     <Compile Include="Models\YoutubeVideoWebModel.cs" />
@@ -323,6 +323,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\YoutubeQueuer.Common\YoutubeQueuer.Common.csproj">
+      <Project>{48E2B026-0010-407B-B25C-73CBD12CC704}</Project>
+      <Name>YoutubeQueuer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\YoutubeQueuer.Lib\YoutubeQueuer.Lib.csproj">
       <Project>{47930087-0712-4749-AC7E-03B860BED9E6}</Project>
       <Name>YoutubeQueuer.Lib</Name>

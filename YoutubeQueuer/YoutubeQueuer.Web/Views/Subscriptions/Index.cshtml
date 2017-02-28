@@ -10,7 +10,6 @@
     <tr>
         <th></th>
     </tr>
-
     @foreach (var item in Model)
     {
         <tr>
@@ -18,13 +17,15 @@
                 @item.ChannelName
             </td>
             <td>Id: @item.ChannelId</td>
-            <td>
-                <a href="http://youtube.com/watch?v=@item.LatestVideo.Id">
-                    @item.LatestVideo.Name
-                </a>
-            </td>
-            <td>@item.LatestVideo.PublishedAt</td>
+            @if (item.LatestVideo != null)
+            {
+                <td>
+                    <a href="http://youtube.com/watch?v=@item.LatestVideo.Id">
+                        @item.LatestVideo.Name
+                    </a>
+                </td>
+                <td>@item.LatestVideo.PublishedAt</td>
+            }
         </tr>
     }
-
 </table>

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Google.Apis.Auth.OAuth2;
-using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YoutubeQueuer.Lib.Models;
@@ -14,21 +12,22 @@ namespace YoutubeQueuer.Lib.Services
     internal class YoutubeSubscriptionsService : IYoutubeSubscriptionsService
     {
         private readonly IYoutubeServiceProvider _youtubeServiceProvider;
+        private readonly IYoutubeConstsProvider _youtubeConstsProvider;
 
-        public YoutubeSubscriptionsService(IYoutubeServiceProvider youtubeServiceProvider)
+        public YoutubeSubscriptionsService(IYoutubeServiceProvider youtubeServiceProvider,
+            IYoutubeConstsProvider youtubeConstsProvider)
         {
             _youtubeServiceProvider = youtubeServiceProvider;
+            _youtubeConstsProvider = youtubeConstsProvider;
         }
 
-        public async Task<IEnumerable<YoutubeSubscriptionModel>> GetUserSubscriptions(UserCredential credential)
+        public IEnumerable<YoutubeSubscriptionModel> GetUserSubscriptions(UserCredential credential)
         {
             var youtube = _youtubeServiceProvider.GetYoutubeService(credential);
-
-            const string parts = "id,snippet,contentDetails";
-            var channels = await GetChannels(credential, youtube, parts);
+            var channels = GetChannels(credential, youtube, _youtubeConstsProvider.ChannelsListParts);
             var channelId = channels.Items.First().Id;
 
-            var subs = await GetSubscriptions(credential, youtube, parts, channelId);
+            var subs = GetSubscriptions(credential, youtube, _youtubeConstsProvider.SubscriptionsListParts, channelId);
             return subs.Items.Select(x => new YoutubeSubscriptionModel
             {
                 ChannelId = x.Snippet.ResourceId.ChannelId,
@@ -36,7 +35,7 @@ namespace YoutubeQueuer.Lib.Services
             }).ToList();
         }
 
-        private static async Task<SubscriptionListResponse> GetSubscriptions(UserCredential credential,
+        private static SubscriptionListResponse GetSubscriptions(UserCredential credential,
             YouTubeService youtube, string parts, string targetChannelId)
         {
             var subsRequest = youtube.Subscriptions.List(parts);
@@ -45,18 +44,18 @@ namespace YoutubeQueuer.Lib.Services
             subsRequest.OauthToken = credential.Token.AccessToken;
             subsRequest.MaxResults = 50;
 
-            var subs = await subsRequest.ExecuteAsync();
+            var subs = subsRequest.Execute();
             return subs;
         }
 
-        private static async Task<ChannelListResponse> GetChannels(UserCredential credential, YouTubeService youtube,
+        private static ChannelListResponse GetChannels(UserCredential credential, YouTubeService youtube,
             string parts)
         {
             var channelsRequest = youtube.Channels.List(parts);
             channelsRequest.Mine = true;
             channelsRequest.OauthToken = credential.Token.AccessToken;
 
-            var channels = await channelsRequest.ExecuteAsync();
+            var channels = channelsRequest.Execute();
             return channels;
         }
     }

@@ -8,7 +8,7 @@ namespace YoutubeQueuer.Lib.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<YoutubeServiceProvider>().AsImplementedInterfaces();
+            RegisterProviders(builder);
             RegisterServices(builder);
             base.Load(builder);
         }
@@ -19,6 +19,12 @@ namespace YoutubeQueuer.Lib.Infrastructure
             builder.RegisterType<YoutubeSubscriptionsService>().AsImplementedInterfaces();
             builder.RegisterType<YoutubePlaylistsService>().AsImplementedInterfaces();
             builder.RegisterType<YoutubeVideosService>().AsImplementedInterfaces();
+        }
+
+        private static void RegisterProviders(ContainerBuilder builder)
+        {
+            builder.RegisterType<YoutubeServiceProvider>().AsImplementedInterfaces();
+            builder.RegisterType<StaticYoutubeConstsProvider>().AsImplementedInterfaces();
         }
     }
 }

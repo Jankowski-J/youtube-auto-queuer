@@ -1,4 +1,4 @@
-﻿@model IEnumerable<YoutubeQueuer.Web.Models.PlaylistWebModel>
+﻿@model IEnumerable<YoutubeQueuer.Web.Models.YoutubePlaylistWebModel>
 
 @{
     ViewBag.Title = "Playlists";
@@ -11,15 +11,24 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @item.Name
-        </td>
-        <td>
-            <a href="@item.Url">Go to playlist</a>
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @using (Html.BeginForm("AddVideos", "Playlists", FormMethod.Post))
+                {
+                    <input type="hidden" name="playlistId" value="@item.Id" />
+
+                    <input type="submit" value="Benin" />
+                }
+            </td>
+            <td>
+                <a href="@item.Url">Go to playlist</a>
+            </td>
+        </tr>
+    }
 
 </table>
