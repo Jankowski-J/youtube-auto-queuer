@@ -12,21 +12,22 @@ namespace YoutubeQueuer.Lib.Services
     internal class YoutubeSubscriptionsService : IYoutubeSubscriptionsService
     {
         private readonly IYoutubeServiceProvider _youtubeServiceProvider;
+        private readonly IYoutubeConstsProvider _youtubeConstsProvider;
 
-        public YoutubeSubscriptionsService(IYoutubeServiceProvider youtubeServiceProvider)
+        public YoutubeSubscriptionsService(IYoutubeServiceProvider youtubeServiceProvider,
+            IYoutubeConstsProvider youtubeConstsProvider)
         {
             _youtubeServiceProvider = youtubeServiceProvider;
+            _youtubeConstsProvider = youtubeConstsProvider;
         }
 
         public IEnumerable<YoutubeSubscriptionModel> GetUserSubscriptions(UserCredential credential)
         {
             var youtube = _youtubeServiceProvider.GetYoutubeService(credential);
-
-            const string parts = "id,snippet,contentDetails";
-            var channels = GetChannels(credential, youtube, parts);
+            var channels = GetChannels(credential, youtube, _youtubeConstsProvider.ChannelsListParts);
             var channelId = channels.Items.First().Id;
 
-            var subs = GetSubscriptions(credential, youtube, parts, channelId);
+            var subs = GetSubscriptions(credential, youtube, _youtubeConstsProvider.SubscriptionsListParts, channelId);
             return subs.Items.Select(x => new YoutubeSubscriptionModel
             {
                 ChannelId = x.Snippet.ResourceId.ChannelId,

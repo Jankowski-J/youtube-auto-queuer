@@ -242,7 +242,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\PlaylistWebModel.cs" />
+    <Compile Include="Models\YoutubePlaylistWebModel.cs" />
     <Compile Include="Models\SubscriptionListViewModel.cs" />
     <Compile Include="Models\YoutubeSubscriptionWebModel.cs" />
     <Compile Include="Models\YoutubeVideoWebModel.cs" />

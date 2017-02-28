@@ -1,6 +1,6 @@
 ﻿namespace YoutubeQueuer.Web.Models
 {
-    public class PlaylistWebModel
+    public class YoutubePlaylistWebModel
     {
         public string Name { get; set; }
         public string Url { get; set; }

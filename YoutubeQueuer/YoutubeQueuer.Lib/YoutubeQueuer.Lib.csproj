@@ -82,6 +82,8 @@
     <Compile Include="Models\YoutubeSubscriptionModel.cs" />
     <Compile Include="Models\YoutubeVideoModel.cs" />
     <Compile Include="Providers\Abstract\IYoutubeServiceProvider.cs" />
+    <Compile Include="Providers\Abstract\IYoutubeConstsProvider.cs" />
+    <Compile Include="Providers\StaticYoutubeConstsProvider.cs" />
     <Compile Include="Providers\YoutubeServiceProvider.cs" />
     <Compile Include="Services\Abstract\IGoogleAuthService.cs" />
     <Compile Include="Services\Abstract\IYoutubePlaylistsService.cs" />

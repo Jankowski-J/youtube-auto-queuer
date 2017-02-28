@@ -12,18 +12,20 @@ namespace YoutubeQueuer.Lib.Services
     internal class YoutubeVideosService : IYoutubeVideosService
     {
         private readonly IYoutubeServiceProvider _serviceProvider;
+        private readonly IYoutubeConstsProvider _youtubeConstsProvider;
 
-        public YoutubeVideosService(IYoutubeServiceProvider serviceProvider)
+        public YoutubeVideosService(IYoutubeServiceProvider serviceProvider,
+            IYoutubeConstsProvider youtubeConstsProvider)
         {
             _serviceProvider = serviceProvider;
+            _youtubeConstsProvider = youtubeConstsProvider;
         }
 
         public IEnumerable<YoutubeVideoModel> GetLatestVideosFromChannel(string channelId, DateTime startDate, UserCredential credential)
         {
-            const string parts = "id,snippet";
             var service = _serviceProvider.GetYoutubeService(credential);
 
-            var searchQuery = service.Search.List(parts);
+            var searchQuery = service.Search.List(_youtubeConstsProvider.VideosListParts);
             searchQuery.ChannelId = channelId;
             searchQuery.MaxResults = 5;
             searchQuery.Order = SearchResource.ListRequest.OrderEnum.Date;
