@@ -9,5 +9,6 @@
         string ChannelsListParts { get; }
         string SubscriptionsListParts { get; }
         string VideosListParts { get; }
+        int MaxResultsCount { get; }
     }
 }

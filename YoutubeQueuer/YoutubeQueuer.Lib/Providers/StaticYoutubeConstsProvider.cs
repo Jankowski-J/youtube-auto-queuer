@@ -11,5 +11,6 @@ namespace YoutubeQueuer.Lib.Providers
         public string ChannelsListParts => "id,snippet,contentDetails";
         public string SubscriptionsListParts => "id,snippet,contentDetails";
         public string VideosListParts => "id,snippet";
+        public int MaxResultsCount => 50;
     }
 }

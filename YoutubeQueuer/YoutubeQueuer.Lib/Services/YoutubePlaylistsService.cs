@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Google;
 using Google.Apis.Auth.OAuth2;
+using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using YoutubeQueuer.Common;
 using YoutubeQueuer.Lib.Models;
@@ -33,11 +35,28 @@ namespace YoutubeQueuer.Lib.Services
 
             var result = request.Execute();
 
-            return result.Items.Select(x => new YoutubePlaylistModel
+            var chann = youtube.Channels.List("id,snippet,contentDetails");
+            chann.Mine = true;
+
+            var playlists = MapPlaylists(result);
+
+            return playlists;
+        }
+
+        private static IEnumerable<YoutubePlaylistModel> MapPlaylists(PlaylistListResponse result)
+        {
+            var playlists = result.Items.Select(x => new YoutubePlaylistModel
             {
                 Name = x.Snippet.Title,
                 Id = x.Id
+            }).ToList();
+
+            playlists.Add(new YoutubePlaylistModel
+            {
+                Id = "WL",
+                Name = "Watch later"
             });
+            return playlists;
         }
 
         public Result AddVideosToPlaylist(IEnumerable<string> videoIds, string playlistId, UserCredential credential)
@@ -50,16 +69,31 @@ namespace YoutubeQueuer.Lib.Services
                     .Where(x => !string.IsNullOrWhiteSpace(x))
                     .Select(x => ToPlaylistItem(playlistId, x)).ToList();
 
-                items.AsParallel().ForAll(x =>
+                foreach (var playlistItem in items)
                 {
-                    var req = youtube.PlaylistItems.Insert(x, _youtubeConstsProvider.InsertPlaylistItemsParts);
-                    req.Execute();
-                });
+                    AddVideoToPlaylist(youtube, playlistItem);
+                }
                 return Result.Succeed();
             }
             catch (Exception e)
             {
                 return Result.Fail();
+            }
+        }
+
+        private void AddVideoToPlaylist(YouTubeService youtube, PlaylistItem playlistItem)
+        {
+            try
+            {
+                var req = youtube.PlaylistItems.Insert(playlistItem, _youtubeConstsProvider.InsertPlaylistItemsParts);
+                req.Execute();
+            }
+            catch (GoogleApiException e)
+            {
+                if (e.Error.Code != 409)
+                {
+                    throw;
+                }
             }
         }
 
