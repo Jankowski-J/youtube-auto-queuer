@@ -27,25 +27,50 @@ namespace YoutubeQueuer.Lib.Services
             var channels = GetChannels(credential, youtube, _youtubeConstsProvider.ChannelsListParts);
             var channelId = channels.Items.First().Id;
 
-            var subs = GetSubscriptions(credential, youtube, _youtubeConstsProvider.SubscriptionsListParts, channelId);
-            return subs.Items.Select(x => new YoutubeSubscriptionModel
-            {
-                ChannelId = x.Snippet.ResourceId.ChannelId,
-                ChannelName = x.Snippet.Title
-            }).ToList();
+            var subs = GetAllUserSubscriptions(credential, youtube, _youtubeConstsProvider.SubscriptionsListParts, channelId);
+            return subs.ToList();
         }
 
-        private static SubscriptionListResponse GetSubscriptions(UserCredential credential,
+        private IEnumerable<YoutubeSubscriptionModel> GetAllUserSubscriptions(UserCredential credential,
+            YouTubeService youtube, string parts, string targetChannelId)
+        {
+            var subsRequest = CreateSubscriptionsRequest(credential, youtube, parts, targetChannelId);
+
+            var subs = subsRequest.Execute();
+            var nextPageToken = subs.NextPageToken;
+            var allSubscriptions = subs.Items.Select(ToYoutubeSubscriptionModel).ToList();
+
+            while (!string.IsNullOrWhiteSpace(nextPageToken))
+            {
+                var nextPageRequest = CreateSubscriptionsRequest(credential, youtube, parts, targetChannelId);
+                nextPageRequest.PageToken = nextPageToken;
+
+                var result = nextPageRequest.Execute();
+                allSubscriptions.AddRange(result.Items.Select(ToYoutubeSubscriptionModel));
+                nextPageToken = result.NextPageToken;
+            }
+
+            return allSubscriptions;
+        }
+
+        private SubscriptionsResource.ListRequest CreateSubscriptionsRequest(UserCredential credential,
             YouTubeService youtube, string parts, string targetChannelId)
         {
             var subsRequest = youtube.Subscriptions.List(parts);
 
             subsRequest.ChannelId = targetChannelId;
             subsRequest.OauthToken = credential.Token.AccessToken;
-            subsRequest.MaxResults = 50;
+            subsRequest.MaxResults = _youtubeConstsProvider.MaxResultsCount;
+            return subsRequest;
+        }
 
-            var subs = subsRequest.Execute();
-            return subs;
+        private static YoutubeSubscriptionModel ToYoutubeSubscriptionModel(Subscription subscription)
+        {
+            return new YoutubeSubscriptionModel
+            {
+                ChannelId = subscription.Snippet.ResourceId.ChannelId,
+                ChannelName = subscription.Snippet.Title
+            };
         }
 
         private static ChannelListResponse GetChannels(UserCredential credential, YouTubeService youtube,
