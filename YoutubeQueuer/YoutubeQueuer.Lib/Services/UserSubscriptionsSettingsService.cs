@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using YoutubeQueuer.Common;
 using YoutubeQueuer.Lib.Models;
@@ -11,7 +12,9 @@ namespace YoutubeQueuer.Lib.Services
     internal class UserSubscriptionsSettingsService : IUserSubscriptionsSettingsService
     {
         private readonly IFileSystemPersistenceProvider _persistenceProvider;
-        private readonly string SubscriptionsSettingsFileName = "subscription_settings.json";
+
+        private static readonly string SubscriptionsSettingsFileName =
+            ConfigurationManager.AppSettings["SubscriptionSettingsFileName"];
 
         public UserSubscriptionsSettingsService(IFileSystemPersistenceProvider persistenceProvider)
         {
