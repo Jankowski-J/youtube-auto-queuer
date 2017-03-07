@@ -2,7 +2,7 @@ language: csharp
 solution: YoutubeQueuer/YoutubeQueuer.sln
 install:
   - nuget restore YoutubeQueuer/YoutubeQueuer.sln
-  - nuget install xunit.runner.console -Version 2.1.0 -OutputDirectory testrunner
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release YoutubeQueuer/YoutubeQueuer.sln
-  - mono ./testrunner/xunit.runner.console.2.1.0/tools/xunit.console.exe ./YoutubeQueuer/YoutubeQueuer.Tests/bin/Release/YoutubeQueuer.Tests.dll
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./YoutubeQueuer/YoutubeQueuer.Tests/bin/Release/YoutubeQueuer.Tests.dll
