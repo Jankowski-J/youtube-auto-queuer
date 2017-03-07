@@ -19,12 +19,14 @@ namespace YoutubeQueuer.Lib.Infrastructure
             builder.RegisterType<YoutubeSubscriptionsService>().AsImplementedInterfaces();
             builder.RegisterType<YoutubePlaylistsService>().AsImplementedInterfaces();
             builder.RegisterType<YoutubeVideosService>().AsImplementedInterfaces();
+            builder.RegisterType<UserSubscriptionsSettingsService>().AsImplementedInterfaces();
         }
 
         private static void RegisterProviders(ContainerBuilder builder)
         {
             builder.RegisterType<YoutubeServiceProvider>().AsImplementedInterfaces();
             builder.RegisterType<StaticYoutubeConstsProvider>().AsImplementedInterfaces();
+            builder.RegisterType<FileSystemPersistenceProvider>().AsImplementedInterfaces();
         }
     }
 }

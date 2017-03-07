@@ -37,5 +37,10 @@
         {
             return new Result<T>(true, data);
         }
+
+        public new static Result<T> Fail()
+        {
+            return new Result<T>(false);
+        }
     }
 }

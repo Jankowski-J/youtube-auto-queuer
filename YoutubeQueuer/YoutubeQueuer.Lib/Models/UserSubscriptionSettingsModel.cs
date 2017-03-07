@@ -4,5 +4,6 @@
     {
         public string ChannelId { get; set; }
         public bool IsIncluded { get; set; }
+        public string UserName { get; set; }
     }
 }
