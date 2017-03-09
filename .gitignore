@@ -15,3 +15,5 @@
 /YoutubeQueuer/.vs/YoutubeQueuer/v14/*.suo
 /YoutubeQueuer/YoutubeQueuer.Common/obj
 /YoutubeQueuer/YoutubeQueuer.Common/bin
+/YoutubeQueuer/YoutubeQueuer.Tests/obj
+/YoutubeQueuer/YoutubeQueuer.Tests/bin
