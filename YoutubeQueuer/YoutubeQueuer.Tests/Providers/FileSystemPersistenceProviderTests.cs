@@ -1,16 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using YoutubeQueuer.Lib.Providers;
 using NUnit.Framework;
+using Xunit;
+using Assert = NUnit.Framework.Assert;
 
 namespace YoutubeQueuer.Tests.Providers
 {
+
     [TestFixture]
-    public class FileSystemPersistenceProviderTests
+    public class FileSystemPersistenceProviderTests : IDisposable
     {
         private FileSystemPersistenceProvider _target;
         private const string TestFileName = "test_file_name.json";
+
+        public FileSystemPersistenceProviderTests()
+        {
+            Setup();
+        }
 
         [SetUp]
         public void Setup()
@@ -18,6 +27,7 @@ namespace YoutubeQueuer.Tests.Providers
             _target = new FileSystemPersistenceProvider();
         }
 
+        [Fact]
         [Test]
         public void PersistData_ForSimpleType_ShouldSucceed()
         {
@@ -32,6 +42,7 @@ namespace YoutubeQueuer.Tests.Providers
             FileAssert.Exists(fullPath);
         }
 
+        [Fact]
         [Test]
         public void PersistData_ForSimpleType_ShouldContainCorrectData()
         {
@@ -49,6 +60,7 @@ namespace YoutubeQueuer.Tests.Providers
             Assert.AreEqual(data, converted);
         }
 
+        [Fact]
         [Test]
         public void PersistData_ForCollection_ShouldSucceed()
         {
@@ -67,6 +79,7 @@ namespace YoutubeQueuer.Tests.Providers
             FileAssert.Exists(fullPath);
         }
 
+        [Fact]
         [Test]
         public void PersistData_ForCollection_ShouldContainCorrectData()
         {
@@ -89,6 +102,7 @@ namespace YoutubeQueuer.Tests.Providers
             CollectionAssert.AreEquivalent(data, converted);
         }
 
+        [Fact]
         [Test]
         public void GetData_ForValidFile_ShouldReturnContainedData()
         {
@@ -123,6 +137,11 @@ namespace YoutubeQueuer.Tests.Providers
             var basePath = System.AppDomain.CurrentDomain.BaseDirectory;
             var combinedPath = Path.Combine(basePath, fileName);
             return combinedPath;
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
         }
     }
 }

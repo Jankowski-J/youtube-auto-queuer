@@ -2,9 +2,11 @@
 using System.Linq;
 using Moq;
 using NUnit.Framework;
+using Xunit;
 using YoutubeQueuer.Lib.Models;
 using YoutubeQueuer.Lib.Providers.Abstract;
 using YoutubeQueuer.Lib.Services;
+using Assert = NUnit.Framework.Assert;
 
 namespace YoutubeQueuer.Tests.Services
 {
@@ -14,13 +16,19 @@ namespace YoutubeQueuer.Tests.Services
         private UserSubscriptionsSettingsService _target;
         private Mock<IFileSystemPersistenceProvider> _persistenceProvider;
 
+        public UserSubscriptionsSettingsServiceTests()
+        {
+            Setup();
+        }
+
         [SetUp]
-        public void Initialize()
+        public void Setup()
         {
             _persistenceProvider = new Mock<IFileSystemPersistenceProvider>();
             _target = new UserSubscriptionsSettingsService(_persistenceProvider.Object);
         }
 
+        [Fact]
         [Test]
         public void SaveUserSubscriptionSettings_For1IncludedAnd2Not_ShouldSucceed()
         {
@@ -55,6 +63,7 @@ namespace YoutubeQueuer.Tests.Services
             Assert.IsTrue(result.IsSuccess);
         }
 
+        [Fact]
         [Test]
         public void GetUserSubscriptionsSettings_ProvidedSettingsHaveManyUsers_ShouldReturnOnlyForSpecifiedUser()
         {
@@ -73,6 +82,7 @@ namespace YoutubeQueuer.Tests.Services
             Assert.IsTrue(result.Data.All(x => x.UserName == userName));
         }
 
+        [Fact]
         [Test]
         public void GetUserSubscriptionsSettings_ProvidedSettingsHaveManyUsers_ShouldSucceed()
         {
