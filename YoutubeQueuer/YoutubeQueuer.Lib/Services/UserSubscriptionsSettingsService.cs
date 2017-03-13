@@ -38,7 +38,10 @@ namespace YoutubeQueuer.Lib.Services
 
         private IEnumerable<UserSubscriptionSettingsModel> GetAllSubscriptionsSettings()
         {
-            return _persistenceProvider.GetData<IEnumerable<UserSubscriptionSettingsModel>>(SubscriptionsSettingsFileName);
+            var data =
+                _persistenceProvider.GetDataOrDefault<IEnumerable<UserSubscriptionSettingsModel>>(
+                    SubscriptionsSettingsFileName);
+            return data ?? Enumerable.Empty<UserSubscriptionSettingsModel>();
         }
 
         public Result SaveUserSubscriptionSettings(IEnumerable<UserSubscriptionSettingsModel> subscriptionSettings,

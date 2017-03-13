@@ -116,7 +116,7 @@ namespace YoutubeQueuer.Tests.Providers
             File.WriteAllText(fullPath, serialized);
 
             // Act
-            var actual = _target.GetData<IEnumerable<long>>(TestFileName);
+            var actual = _target.GetDataOrDefault<IEnumerable<long>>(TestFileName);
 
             // Assert
             CollectionAssert.AreEquivalent(data, actual);

@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using YoutubeQueuer.Lib.Providers.Abstract;
 
@@ -15,13 +15,20 @@ namespace YoutubeQueuer.Lib.Providers
             File.WriteAllText(fullPath, serialized);
         }
 
-        public T GetData<T>(string fileName)
+        public T GetDataOrDefault<T>(string fileName)
         {
-            var fullPath = GetFullPath(fileName);
+            try
+            {
+                var fullPath = GetFullPath(fileName);
 
-            var serialized = File.ReadAllText(fullPath);
+                var serialized = File.ReadAllText(fullPath);
 
-            return JsonConvert.DeserializeObject<T>(serialized);
+                return JsonConvert.DeserializeObject<T>(serialized);
+            }
+            catch (FileNotFoundException)
+            {
+                return default(T);
+            }
         }
 
         private static string GetFullPath(string fileName)

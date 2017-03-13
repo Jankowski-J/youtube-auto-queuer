@@ -3,6 +3,6 @@
     public interface IFileSystemPersistenceProvider
     {
         void PersistData<T>(T data, string fileName);
-        T GetData<T>(string fileName);
+        T GetDataOrDefault<T>(string fileName);
     }
 }

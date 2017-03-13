@@ -1,0 +1,19 @@
+﻿@model YoutubeQueuer.Web.Models.YoutubeSubscriptionWebModel
+
+<tr>
+    <td>
+        @Html.CheckBoxFor(x => x.IsIncluded)
+        @Html.DisplayFor(x => x.ChannelName)
+        @Html.HiddenFor(x => x.ChannelId)
+    </td>
+    <td>Id: @Model.ChannelId</td>
+    @if (Model.LatestVideo != null)
+    {
+        <td>
+            <a href="http://youtube.com/watch?v=@Model.LatestVideo.Id">
+                @Model.LatestVideo.Name
+            </a>
+        </td>
+        <td>@Model.LatestVideo.PublishedAt</td>
+    }
+</tr>
