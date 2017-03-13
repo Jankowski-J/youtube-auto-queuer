@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using YoutubeQueuer.Lib.Providers;
-using NUnit.Framework;
 using Xunit;
-using Assert = NUnit.Framework.Assert;
 
 namespace YoutubeQueuer.Tests.Providers
 {
-
-    [TestFixture]
     public class FileSystemPersistenceProviderTests : IDisposable
     {
         private FileSystemPersistenceProvider _target;
@@ -21,14 +17,12 @@ namespace YoutubeQueuer.Tests.Providers
             Setup();
         }
 
-        [SetUp]
         public void Setup()
         {
             _target = new FileSystemPersistenceProvider();
         }
 
         [Fact]
-        [Test]
         public void PersistData_ForSimpleType_ShouldSucceed()
         {
             // Arrange
@@ -39,11 +33,10 @@ namespace YoutubeQueuer.Tests.Providers
 
             // Assert
             var fullPath = GetFullPath(TestFileName);
-            FileAssert.Exists(fullPath);
+            Assert.True(File.Exists(fullPath));
         }
 
         [Fact]
-        [Test]
         public void PersistData_ForSimpleType_ShouldContainCorrectData()
         {
             // Arrange
@@ -57,11 +50,10 @@ namespace YoutubeQueuer.Tests.Providers
             var file = File.ReadAllText(fullPath);
             var converted = JsonConvert.DeserializeObject<string>(file);
 
-            Assert.AreEqual(data, converted);
+            Assert.Equal(data, converted);
         }
 
         [Fact]
-        [Test]
         public void PersistData_ForCollection_ShouldSucceed()
         {
             // Arrange
@@ -75,12 +67,12 @@ namespace YoutubeQueuer.Tests.Providers
             // Act
             _target.PersistData(data, TestFileName);
             var fullPath = GetFullPath(TestFileName);
+
             // Assert
-            FileAssert.Exists(fullPath);
+            Assert.True(File.Exists(fullPath));
         }
 
         [Fact]
-        [Test]
         public void PersistData_ForCollection_ShouldContainCorrectData()
         {
             // Arrange
@@ -99,11 +91,10 @@ namespace YoutubeQueuer.Tests.Providers
             var file = File.ReadAllText(fullPath);
             var converted = JsonConvert.DeserializeObject<IEnumerable<int>>(file);
 
-            CollectionAssert.AreEquivalent(data, converted);
+            Assert.Equal(data, converted);
         }
 
         [Fact]
-        [Test]
         public void GetData_ForValidFile_ShouldReturnContainedData()
         {
             // Arrange
@@ -119,10 +110,9 @@ namespace YoutubeQueuer.Tests.Providers
             var actual = _target.GetDataOrDefault<IEnumerable<long>>(TestFileName);
 
             // Assert
-            CollectionAssert.AreEquivalent(data, actual);
+            Assert.Equal(data, actual);
         }
         
-        [TearDown]
         public void CleanUp()
         {
             var fullPath = GetFullPath(TestFileName);
@@ -134,7 +124,7 @@ namespace YoutubeQueuer.Tests.Providers
 
         private static string GetFullPath(string fileName)
         {
-            var basePath = System.AppDomain.CurrentDomain.BaseDirectory;
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
             var combinedPath = Path.Combine(basePath, fileName);
             return combinedPath;
         }

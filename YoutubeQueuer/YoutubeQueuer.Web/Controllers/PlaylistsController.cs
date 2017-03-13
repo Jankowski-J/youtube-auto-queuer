@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using YoutubeQueuer.Common;
 using YoutubeQueuer.Lib.Models;
 using YoutubeQueuer.Lib.Services.Abstract;
 using YoutubeQueuer.Web.Extensions;
@@ -17,14 +18,17 @@ namespace YoutubeQueuer.Web.Controllers
         private readonly IYoutubePlaylistsService _playlistsService;
         private readonly IYoutubeVideosService _videosService;
         private readonly IYoutubeSubscriptionsService _youtubeSubscriptionsService;
+        private readonly IUserSubscriptionsSettingsService _userSubscriptionsSettingsService;
 
         public PlaylistsController(IYoutubePlaylistsService playlistsService,
             IYoutubeVideosService videosService,
-            IYoutubeSubscriptionsService youtubeSubscriptionsService)
+            IYoutubeSubscriptionsService youtubeSubscriptionsService,
+            IUserSubscriptionsSettingsService userSubscriptionsSettingsService)
         {
             _playlistsService = playlistsService;
             _videosService = videosService;
             _youtubeSubscriptionsService = youtubeSubscriptionsService;
+            _userSubscriptionsSettingsService = userSubscriptionsSettingsService;
         }
         
         public ActionResult Index()
@@ -49,8 +53,14 @@ namespace YoutubeQueuer.Web.Controllers
         public ActionResult AddVideos(string playlistId)
         {
             var subscriptions = _youtubeSubscriptionsService.GetUserSubscriptions(this.GetSessionCredential()).ToList();
+            var settings =
+                _userSubscriptionsSettingsService.GetUserSubscriptionsSettings(this.GetAuthenticatedUserName());
 
-            var videos = GetNewestVideosFromSubscriptions(subscriptions);
+            var validSubscriptions = !settings.Data.Any()
+                ? subscriptions
+                : subscriptions.Where(x => IsSubscriptionIncluded(settings, x)).ToList();
+
+            var videos = GetNewestVideosFromSubscriptions(validSubscriptions);
 
             var result = _playlistsService.AddVideosToPlaylist(videos.Select(x => x.Id).ToList(), playlistId,
                 this.GetSessionCredential());
@@ -61,6 +71,13 @@ namespace YoutubeQueuer.Web.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        private static bool IsSubscriptionIncluded(Result<IEnumerable<UserSubscriptionSettingsModel>> settings,
+            YoutubeSubscriptionModel subscription)
+        {
+            var setting = settings.Data.FirstOrDefault(y => y.ChannelId == subscription.ChannelId);
+            return setting != null && setting.IsIncluded;
         }
 
         private IEnumerable<YoutubeVideoModel> GetNewestVideosFromSubscriptions(IEnumerable<YoutubeSubscriptionModel> subscriptions)

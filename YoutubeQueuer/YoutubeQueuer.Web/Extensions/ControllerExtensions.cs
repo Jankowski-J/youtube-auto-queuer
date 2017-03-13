@@ -14,5 +14,12 @@ namespace YoutubeQueuer.Web.Extensions
         {
             return controller.Session["Credentials"] as UserCredential;
         }
+
+        public static string GetAuthenticatedUserName(this Controller controller)
+        {
+            var credential = GetSessionCredential(controller);
+
+            return credential?.UserId;
+        }
     }
 }

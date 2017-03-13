@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using NUnit.Framework;
 using Xunit;
 using YoutubeQueuer.Lib.Models;
 using YoutubeQueuer.Lib.Providers.Abstract;
 using YoutubeQueuer.Lib.Services;
-using Assert = NUnit.Framework.Assert;
 
 namespace YoutubeQueuer.Tests.Services
 {
-    [TestFixture]
     public class UserSubscriptionsSettingsServiceTests
     {
         private UserSubscriptionsSettingsService _target;
@@ -21,7 +18,6 @@ namespace YoutubeQueuer.Tests.Services
             Setup();
         }
 
-        [SetUp]
         public void Setup()
         {
             _persistenceProvider = new Mock<IFileSystemPersistenceProvider>();
@@ -29,7 +25,6 @@ namespace YoutubeQueuer.Tests.Services
         }
 
         [Fact]
-        [Test]
         public void SaveUserSubscriptionSettings_For1IncludedAnd2Not_ShouldSucceed()
         {
             // Arrange
@@ -60,11 +55,10 @@ namespace YoutubeQueuer.Tests.Services
             var result = _target.SaveUserSubscriptionSettings(subscriptions, userName);
 
             // Assert
-            Assert.IsTrue(result.IsSuccess);
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
-        [Test]
         public void GetUserSubscriptionsSettings_ProvidedSettingsHaveManyUsers_ShouldReturnOnlyForSpecifiedUser()
         {
             // Arrange
@@ -78,12 +72,11 @@ namespace YoutubeQueuer.Tests.Services
             var result = _target.GetUserSubscriptionsSettings(userName);
 
             // Assert
-            Assert.AreEqual(2, result.Data.Count());
-            Assert.IsTrue(result.Data.All(x => x.UserName == userName));
+            Assert.Equal(2, result.Data.Count());
+            Assert.True(result.Data.All(x => x.UserName == userName));
         }
 
         [Fact]
-        [Test]
         public void GetUserSubscriptionsSettings_ProvidedSettingsHaveManyUsers_ShouldSucceed()
         {
             // Arrange
@@ -97,8 +90,8 @@ namespace YoutubeQueuer.Tests.Services
             var result = _target.GetUserSubscriptionsSettings(userName);
 
             // Assert
-            Assert.AreEqual(2, result.Data.Count());
-            Assert.IsTrue(result.IsSuccess);
+            Assert.Equal(2, result.Data.Count());
+            Assert.True(result.IsSuccess);
         }
 
         private static IEnumerable<UserSubscriptionSettingsModel> GetSubscriptionsForMoreThanOneUser(string userName)
