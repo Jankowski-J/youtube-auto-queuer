@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.YouTube.v3;
@@ -24,12 +25,20 @@ namespace YoutubeQueuer.Lib.Services
 
         public Result<IEnumerable<YoutubeSubscriptionModel>> GetUserSubscriptions(UserCredential credential)
         {
-            var youtube = _youtubeServiceProvider.GetYoutubeService(credential);
-            var channels = GetChannels(credential, youtube, _youtubeConstsProvider.ChannelsListParts);
-            var channelId = channels.Items.First().Id;
+            try
+            {
+                var youtube = _youtubeServiceProvider.GetYoutubeService(credential);
+                var channels = GetChannels(credential, youtube, _youtubeConstsProvider.ChannelsListParts);
+                var channelId = channels.Items.First().Id;
 
-            var subs = GetAllUserSubscriptions(credential, youtube, _youtubeConstsProvider.SubscriptionsListParts, channelId);
-            return Result<IEnumerable<YoutubeSubscriptionModel>>.Succeed(subs.ToList());
+                var subs = GetAllUserSubscriptions(credential, youtube, _youtubeConstsProvider.SubscriptionsListParts,
+                    channelId);
+                return Result<IEnumerable<YoutubeSubscriptionModel>>.Succeed(subs.ToList());
+            }
+            catch (Exception)
+            {
+                return Result<IEnumerable<YoutubeSubscriptionModel>>.Fail();
+            }
         }
 
         private IEnumerable<YoutubeSubscriptionModel> GetAllUserSubscriptions(UserCredential credential,
@@ -81,8 +90,7 @@ namespace YoutubeQueuer.Lib.Services
             channelsRequest.Mine = true;
             channelsRequest.OauthToken = credential.Token.AccessToken;
 
-            var channels = channelsRequest.Execute();
-            return channels;
+            return channelsRequest.Execute();
         }
     }
 }

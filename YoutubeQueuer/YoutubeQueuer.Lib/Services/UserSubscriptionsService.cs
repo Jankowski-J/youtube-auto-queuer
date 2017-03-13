@@ -25,7 +25,6 @@ namespace YoutubeQueuer.Lib.Services
             try
             {
                 var settings = _subscriptionsSettingsService.GetUserSubscriptionsSettings(credential.UserId);
-
                 var subscriptions = _subscriptionsService.GetUserSubscriptions(credential);
 
                 if (!settings.IsSuccess || !subscriptions.IsSuccess)
@@ -33,11 +32,9 @@ namespace YoutubeQueuer.Lib.Services
                     return Result<IEnumerable<UserSubscriptionModel>>.Fail();
                 }
 
-                var included = subscriptions.Data.Where(x =>
-                {
-                    var setting = settings.Data.FirstOrDefault(y => y.ChannelId == x.ChannelId);
-                    return setting != null && setting.IsIncluded;
-                }).Select(ToUserSubscriptionModel(credential));
+                var included = subscriptions
+                    .Data.Where(x => IsSubscriptionIncluded(settings.Data, x))
+                    .Select(ToUserSubscriptionModel(credential));
 
                 return Result<IEnumerable<UserSubscriptionModel>>.Succeed(included);
             }
@@ -45,6 +42,13 @@ namespace YoutubeQueuer.Lib.Services
             {
                 return Result<IEnumerable<UserSubscriptionModel>>.Fail();
             }
+        }
+
+        private static bool IsSubscriptionIncluded(IEnumerable<UserSubscriptionSettingsModel> settings,
+            YoutubeSubscriptionModel subscription)
+        {
+            var setting = settings.FirstOrDefault(y => y.ChannelId == subscription.ChannelId);
+            return setting != null && setting.IsIncluded;
         }
 
         private static Func<YoutubeSubscriptionModel, UserSubscriptionModel> ToUserSubscriptionModel(

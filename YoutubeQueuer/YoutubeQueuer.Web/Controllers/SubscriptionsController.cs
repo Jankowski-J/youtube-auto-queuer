@@ -29,7 +29,8 @@ namespace YoutubeQueuer.Web.Controllers
         [AuthorizeYoutube]
         public ActionResult Index()
         {
-            var subscriptions = _youtubeSubscriptionsService.GetUserSubscriptions(this.GetSessionCredential()).ToList();
+            var subscriptionsResult = _youtubeSubscriptionsService.GetUserSubscriptions(this.GetSessionCredential());
+            var subscriptions = subscriptionsResult.Data;
 
             var mapped = subscriptions.Select(ToSubscriptionWebModel).ToList();
             var subscriptionsSettings =
