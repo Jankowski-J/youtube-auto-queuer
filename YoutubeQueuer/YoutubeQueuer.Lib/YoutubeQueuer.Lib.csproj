@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\QueuerLibAutofacModule.cs" />
+    <Compile Include="Models\UserSubscriptionModel.cs" />
     <Compile Include="Models\UserSubscriptionSettingsModel.cs" />
     <Compile Include="Models\YoutubePlaylistModel.cs" />
     <Compile Include="Models\YoutubeSubscriptionModel.cs" />
@@ -90,12 +91,14 @@
     <Compile Include="Providers\StaticYoutubeConstsProvider.cs" />
     <Compile Include="Providers\YoutubeServiceProvider.cs" />
     <Compile Include="Services\Abstract\IGoogleAuthService.cs" />
+    <Compile Include="Services\Abstract\IUserSubscriptionsService.cs" />
     <Compile Include="Services\Abstract\IUserSubscriptionsSettingsService.cs" />
     <Compile Include="Services\Abstract\IYoutubePlaylistsService.cs" />
     <Compile Include="Services\Abstract\IYoutubeSubscriptionsService.cs" />
     <Compile Include="Services\Abstract\IYoutubeVideosService.cs" />
     <Compile Include="Services\GoogleAuthService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\UserSubscriptionsService.cs" />
     <Compile Include="Services\UserSubscriptionsSettingsService.cs" />
     <Compile Include="Services\YoutubePlaylistsService.cs" />
     <Compile Include="Services\YoutubeSubscriptionsService.cs" />

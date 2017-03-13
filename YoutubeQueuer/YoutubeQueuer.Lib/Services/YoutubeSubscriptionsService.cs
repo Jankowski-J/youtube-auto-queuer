@@ -3,6 +3,7 @@ using System.Linq;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
+using YoutubeQueuer.Common;
 using YoutubeQueuer.Lib.Models;
 using YoutubeQueuer.Lib.Providers.Abstract;
 using YoutubeQueuer.Lib.Services.Abstract;
@@ -21,14 +22,14 @@ namespace YoutubeQueuer.Lib.Services
             _youtubeConstsProvider = youtubeConstsProvider;
         }
 
-        public IEnumerable<YoutubeSubscriptionModel> GetUserSubscriptions(UserCredential credential)
+        public Result<IEnumerable<YoutubeSubscriptionModel>> GetUserSubscriptions(UserCredential credential)
         {
             var youtube = _youtubeServiceProvider.GetYoutubeService(credential);
             var channels = GetChannels(credential, youtube, _youtubeConstsProvider.ChannelsListParts);
             var channelId = channels.Items.First().Id;
 
             var subs = GetAllUserSubscriptions(credential, youtube, _youtubeConstsProvider.SubscriptionsListParts, channelId);
-            return subs.ToList();
+            return Result<IEnumerable<YoutubeSubscriptionModel>>.Succeed(subs.ToList());
         }
 
         private IEnumerable<YoutubeSubscriptionModel> GetAllUserSubscriptions(UserCredential credential,

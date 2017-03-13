@@ -5,8 +5,8 @@ using YoutubeQueuer.Lib.Models;
 
 namespace YoutubeQueuer.Lib.Services.Abstract
 {
-    public interface IYoutubeSubscriptionsService
+    public interface IUserSubscriptionsService
     {
-        Result<IEnumerable<YoutubeSubscriptionModel>> GetUserSubscriptions(UserCredential credential);
+        Result<IEnumerable<UserSubscriptionModel>> GetOnlyIncludedSubscriptions(UserCredential credential);
     }
 }
