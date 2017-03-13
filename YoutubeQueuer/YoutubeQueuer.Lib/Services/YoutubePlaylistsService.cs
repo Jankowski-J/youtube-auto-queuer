@@ -75,7 +75,7 @@ namespace YoutubeQueuer.Lib.Services
                 }
                 return Result.Succeed();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return Result.Fail();
             }
