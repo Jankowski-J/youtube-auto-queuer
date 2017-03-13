@@ -5,5 +5,6 @@
         public string ChannelName { get; set; }
         public string ChannelId { get; set; }
         public YoutubeVideoWebModel LatestVideo { get; set; }
+        public bool IsIncluded { get; set; }
     }
 }

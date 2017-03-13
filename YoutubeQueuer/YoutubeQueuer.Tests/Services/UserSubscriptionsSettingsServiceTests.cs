@@ -71,7 +71,7 @@ namespace YoutubeQueuer.Tests.Services
             const string userName = "andrzej";
             var subscriptions = GetSubscriptionsForMoreThanOneUser(userName);
 
-            _persistenceProvider.Setup(x => x.GetData<IEnumerable<UserSubscriptionSettingsModel>>(It.IsAny<string>()))
+            _persistenceProvider.Setup(x => x.GetDataOrDefault<IEnumerable<UserSubscriptionSettingsModel>>(It.IsAny<string>()))
                 .Returns(subscriptions);
 
             // Act
@@ -90,7 +90,7 @@ namespace YoutubeQueuer.Tests.Services
             const string userName = "andrzej";
             var subscriptions = GetSubscriptionsForMoreThanOneUser(userName);
 
-            _persistenceProvider.Setup(x => x.GetData<IEnumerable<UserSubscriptionSettingsModel>>(It.IsAny<string>()))
+            _persistenceProvider.Setup(x => x.GetDataOrDefault<IEnumerable<UserSubscriptionSettingsModel>>(It.IsAny<string>()))
                 .Returns(subscriptions);
 
             // Act

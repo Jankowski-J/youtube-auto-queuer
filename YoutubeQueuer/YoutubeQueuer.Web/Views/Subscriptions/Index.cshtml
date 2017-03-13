@@ -5,27 +5,18 @@
 }
 
 <h2>Subscriptions</h2>
-
-<table class="table">
-    <tr>
-        <th></th>
-    </tr>
-    @foreach (var item in Model)
-    {
+@using (Html.BeginForm("Index", "Subscriptions", FormMethod.Post))
+{
+    <input type="submit" value="Save settings" />
+    <table class="table">
         <tr>
-            <td>
-                @item.ChannelName
-            </td>
-            <td>Id: @item.ChannelId</td>
-            @if (item.LatestVideo != null)
-            {
-                <td>
-                    <a href="http://youtube.com/watch?v=@item.LatestVideo.Id">
-                        @item.LatestVideo.Name
-                    </a>
-                </td>
-                <td>@item.LatestVideo.PublishedAt</td>
-            }
+            <th></th>
         </tr>
-    }
-</table>
+
+        @*@foreach (var item in Model)
+        {
+            @Html.Partial("SubscriptionPartial", item)
+        }*@
+        @Html.EditorForModel()
+    </table>
+}
