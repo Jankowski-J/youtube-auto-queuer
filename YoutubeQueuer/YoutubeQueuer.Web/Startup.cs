@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Web.Http;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Microsoft.Owin;
@@ -17,6 +18,22 @@ namespace YoutubeQueuer.Web
         {
             ConfigureAuth(app);
             SetupDependencyResolution();
+
+            var config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();
+            
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new {id = RouteParameter.Optional}
+            );
+            config.Routes.MapHttpRoute(
+                name: "DefaultRoute",
+                routeTemplate: "{controller}/{action}/{id}",
+                defaults: new {controller = "Home", action = "Index", id = UrlParameter.Optional}
+            );
+
+            app.UseWebApi(config);
         }
 
         private static void SetupDependencyResolution()
@@ -26,7 +43,7 @@ namespace YoutubeQueuer.Web
             builder.RegisterFilterProvider();
             builder.RegisterModule<QueuerLibAutofacModule>();
             builder.RegisterType<AuthorizeYoutubeFilter>().AsActionFilterFor<PlaylistsController>()
-                 .InstancePerRequest();
+                .InstancePerRequest();
             builder.RegisterType<AuthorizeYoutubeFilter>().AsActionFilterFor<SubscriptionsController>();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 

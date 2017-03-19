@@ -18,3 +18,6 @@
 /YoutubeQueuer/YoutubeQueuer.Tests/obj
 /YoutubeQueuer/YoutubeQueuer.Tests/bin
 /YoutubeQueuer/.vs
+/YoutubeQueuer/YoutubeQueuer.Web.Runner/obj
+/YoutubeQueuer/YoutubeQueuer.Web.Runner/bin
+/YoutubeQueuer/YoutubeQueuer.Web.Runner/*.user
