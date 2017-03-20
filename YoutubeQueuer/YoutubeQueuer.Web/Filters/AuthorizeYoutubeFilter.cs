@@ -1,5 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
 using YoutubeQueuer.Lib.Services.Abstract;
 using YoutubeQueuer.Web.Settings;
 
@@ -27,6 +32,10 @@ namespace YoutubeQueuer.Web.Filters
             var secrets = new GoogleSettingsProvider().GetSecretsStream();
             var task = _googleAuthService.AuthorizeUser(secrets);
 
+            //if (!task.IsCompleted)
+            //{
+            //    task.RunSynchronously();
+            //}
             filterContext.HttpContext.Session["Credentials"] = task.Result;
         }
 
