@@ -25,6 +25,7 @@ var url = oauth2Client.generateAuthUrl({
     scope: scopes
 });
 
+app.use('/scripts', express.static(__dirname + '/scripts'));
 
 app.get("/Authorize", (req, res) => {
     console.log(url);
@@ -36,9 +37,9 @@ app.get("/Authorized", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("benito");
+    res.sendFile(__dirname + "/index.html");
 });
 
 app.listen(port, function () {
-    console.log(`Example app listening on port ${port}!`)
+    console.log(`Youtube Queuer app listening on port ${port}!`)
 });
