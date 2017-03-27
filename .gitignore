@@ -18,3 +18,5 @@
 /YoutubeQueuer/YoutubeQueuer.Tests/obj
 /YoutubeQueuer/YoutubeQueuer.Tests/bin
 /YoutubeQueuer/.vs
+/YoutubeQueuerJS/node_modules
+/YoutubeQueuerJS/config.js
