@@ -20,3 +20,4 @@
 /YoutubeQueuer/.vs
 /YoutubeQueuerJS/node_modules
 /YoutubeQueuerJS/config.js
+/YoutubeQueuerJS/server/google-auth-config.js
