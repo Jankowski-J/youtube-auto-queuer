@@ -1,5 +1,6 @@
 var googleAuth = require('./googleAuth');
 var path = require('path');
+var playlistsService = require('./youtube-playlists-service');
 
 var routesConfig = {};
 
@@ -11,7 +12,20 @@ routesConfig.configure = function (app, port) {
     });
 
     app.get("/Authorized", (req, res) => {
-        res.redirect("/");
+        googleAuth.oauthClient.getToken(req.query.code, function (err, tokens) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            googleAuth.oauthClient.setCredentials(tokens);
+            res.redirect("/Playlists");
+        });
+    });
+
+    app.get("/Playlists", (req, res) => {
+        var result = playlistsService.getPlaylists(data => {
+            res.send(JSON.stringify(data));
+        });
     });
 
     app.get("/", (req, res) => {

@@ -22,6 +22,8 @@ authService.configure = function (port) {
         access_type: 'offline',
         scope: scopes
     });
+
+    authService.oauthClient = oauth2Client;
 }
 
 module.exports = authService;
