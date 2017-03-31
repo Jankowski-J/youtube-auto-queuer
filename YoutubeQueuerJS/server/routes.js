@@ -8,22 +8,22 @@ var routesConfig = {};
 routesConfig.configure = function (app, port) {
     googleAuth.configure(port);
 
-    app.get("/Authorize", (req, res) => {
+    app.get("/authorize", (req, res) => {
         res.redirect(googleAuth.authorizationUrl);
     });
 
-    app.get("/Authorized", (req, res) => {
+    app.get("/authorized", (req, res) => {
         googleAuth.oauthClient.getToken(req.query.code, function (err, tokens) {
             if (err) {
                 console.log(err);
                 return;
             }
             googleAuth.oauthClient.setCredentials(tokens);
-            res.redirect("/Playlists");
+            res.redirect("/playlists");
         });
     });
 
-    app.get("/api/Playlists", (req, res) => {
+    app.get("/api/playlists", (req, res) => {
         var result = playlistsService.getPlaylists(data => {
             res.send(JSON.stringify(data));
         });

@@ -4,29 +4,28 @@ var youtubeServiceProvider = require('./youtube-service-provider');
 
 var subscriptionsService = {};
 
-subscriptionsService.getSubscriptions = function(callback) {
+subscriptionsService.getSubscriptions = function (callback) {
     var youtube = youtubeServiceProvider.getYoutubeService();
 
     return youtube.subscriptions.list({
         part: "id,snippet",
         mine: true
-    }, (err, data, response) => {
-        var mappedData;
+    }, (err, subscriptions, response) => {
+        var data;
         if (err) {
-            console.error('Error: ' + err);
+            console.error('Error while getting subscriptions: ' + err);
+            data = [];
         }
-        if (data) {
-            mappedData = data.items.map(e => {
+        if (subscriptions) {
+            data = subscriptions.items.map(e => {
                 return {
-                    playlistId: e.id,
-                    name: e.snippet.title
+                    channelId: e.snippet.resourceId.channelId,
+                    name: e.snippet.title,
+                    maxRequests: 50
                 }
             });
         }
-        if (response) {
-            console.log('Status code: ' + response.statusCode);
-        }
-        callback(mappedData, response, err);
+        callback(data, response, err);
     });
 }
 

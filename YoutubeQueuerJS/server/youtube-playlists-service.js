@@ -10,25 +10,22 @@ playlistsService.getPlaylists = function (callback) {
     return youtube.playlists.list({
         part: "id,snippet",
         mine: true
-    }, (err, data, response) => {
-        var mappedData;
+    }, (err, playlists, response) => {
+        var data;
         if (err) {
-            console.error('Error: ' + err);
+            console.error('Error while getting playlists: ' + err);
+            playlists = [];
         }
-        if (data) {
-            mappedData = data.items.map(e => {
+        if (playlists) {
+            data = playlists.items.map(e => {
                 return {
                     playlistId: e.id,
                     name: e.snippet.title
                 }
             });
         }
-        if (response) {
-            console.log('Status code: ' + response.statusCode);
-        }
-        callback(mappedData, response, err);
+        callback(data, response, err);
     });
 };
-
 
 module.exports = playlistsService;
