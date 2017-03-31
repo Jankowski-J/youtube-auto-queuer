@@ -2,12 +2,12 @@ var google = require('googleapis');
 var googleAuth = require('./googleAuth');
 var youtubeServiceProvider = require('./youtube-service-provider');
 
-var playlistsService = {};
+var subscriptionsService = {};
 
-playlistsService.getPlaylists = function (callback) {
+subscriptionsService.getSubscriptions = function(callback) {
     var youtube = youtubeServiceProvider.getYoutubeService();
 
-    return youtube.playlists.list({
+    return youtube.subscriptions.list({
         part: "id,snippet",
         mine: true
     }, (err, data, response) => {
@@ -28,7 +28,6 @@ playlistsService.getPlaylists = function (callback) {
         }
         callback(mappedData, response, err);
     });
-};
+}
 
-
-module.exports = playlistsService;
+module.exports = subscriptionsService;

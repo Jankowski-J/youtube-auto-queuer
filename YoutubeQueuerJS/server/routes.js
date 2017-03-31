@@ -1,6 +1,7 @@
 var googleAuth = require('./googleAuth');
 var path = require('path');
 var playlistsService = require('./youtube-playlists-service');
+var subscriptionsService = require('./youtube-subscriptions-service');
 
 var routesConfig = {};
 
@@ -22,8 +23,14 @@ routesConfig.configure = function (app, port) {
         });
     });
 
-    app.get("/Playlists", (req, res) => {
+    app.get("/api/Playlists", (req, res) => {
         var result = playlistsService.getPlaylists(data => {
+            res.send(JSON.stringify(data));
+        });
+    });
+
+    app.get("/api/subscriptions", (req, res) => {
+        subscriptionsService.getSubscriptions(data =>{
             res.send(JSON.stringify(data));
         });
     });
