@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <title>Your Youtube subscriptions</title>
+</head>
+
+<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/css/uikit.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+    <h1>Here be subscriptions</h1>
+    <div>
+        <ul data-bind="foreach: subscriptions">
+            <li>
+                <input type="checkbox" />
+                <span data-bind="text: name"></span>
+            </li>
+        </ul>
+    </div>
+    <script src="/scripts/subscriptions.js"></script>
+    <script type="text/javascript">
+        var service = new SubscriptionsService();
+        var subs = service.getSubscriptions(subs => {
+            ko.applyBindings({
+                subscriptions: subs
+            });
+        });
+    </script>
+</body>
+
+</html>

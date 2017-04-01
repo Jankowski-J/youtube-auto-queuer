@@ -1,11 +1,11 @@
 {
   "name": "youtube-queuer-js",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "A utility for automated adding of videos from subscriptions to playlists.",
+  "main": "server/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node main.js"
+    "start": "node server/main.js"
   },
   "author": "Jakub Jankowski",
   "license": "MIT",

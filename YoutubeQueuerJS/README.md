@@ -3,8 +3,8 @@ This is a JavaScript implementation of a YoutubeQueuer functionality.
 
 ## Running this app
 
-This app requires a `config.js file`, which provides a config object containing client data.
-Repository contains a `config-sample.js` file, which is a template for this configuration file:
+This app requires a `google-auth-config.js file`, which provides a config object containing client data. The file has to be placed in the `server` directory.
+Repository contains a `google-auth-config-sample.js` file, which is a template for this configuration file:
 
 ```javascript
 var config = {};
