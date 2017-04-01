@@ -4,7 +4,7 @@ var youtubeServiceProvider = require('./youtube-service-provider');
 
 var playlistsService = {};
 
-playlistsService.getPlaylists = function (callback) {
+playlistsService.getPlaylists = function(callback) {
     var youtube = youtubeServiceProvider.getYoutubeService();
 
     return youtube.playlists.list({

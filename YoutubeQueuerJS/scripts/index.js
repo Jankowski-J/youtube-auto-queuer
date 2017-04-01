@@ -9,4 +9,4 @@
     signInButton.addEventListener("click", e => {
         signIn();
     });
-}());
+})();

@@ -3,7 +3,7 @@ var googleAuth = require('./googleAuth')
 
 var youtube = undefined;
 
-var initializeYoutubeService = function () {
+var initializeYoutubeService = function() {
     var yt = google.youtube({
         version: 'v3',
         auth: googleAuth.oauthClient
@@ -14,7 +14,7 @@ var initializeYoutubeService = function () {
 
 var youtubeServiceProvider = {};
 youtubeServiceProvider.getYoutubeService = function() {
-    if(!youtube) {
+    if (!youtube) {
         youtube = initializeYoutubeService();
     }
 

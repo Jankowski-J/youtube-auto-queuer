@@ -11,6 +11,6 @@ app.use('/scripts', express.static(scriptsPath));
 var port = config.port;
 routes.configure(app, port);
 
-app.listen(port, function () {
+app.listen(port, function() {
     console.log(`Youtube Queuer app listening on port ${port}!`)
 });

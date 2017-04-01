@@ -4,12 +4,13 @@ var youtubeServiceProvider = require('./youtube-service-provider');
 
 var subscriptionsService = {};
 
-subscriptionsService.getSubscriptions = function (callback) {
+subscriptionsService.getSubscriptions = function(callback) {
     var youtube = youtubeServiceProvider.getYoutubeService();
 
     return youtube.subscriptions.list({
         part: "id,snippet",
-        mine: true
+        mine: true,
+        maxResults: 50
     }, (err, subscriptions, response) => {
         var data;
         if (err) {
@@ -20,8 +21,7 @@ subscriptionsService.getSubscriptions = function (callback) {
             data = subscriptions.items.map(e => {
                 return {
                     channelId: e.snippet.resourceId.channelId,
-                    name: e.snippet.title,
-                    maxRequests: 50
+                    name: e.snippet.title
                 }
             });
         }

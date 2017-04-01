@@ -10,7 +10,7 @@ var scopes = [
     'https://www.googleapis.com/auth/youtube.force-ssl'
 ];
 
-authService.configure = function (port) {
+authService.configure = function(port) {
 
     var oauth2Client = new OAuth2(
         authConfig.clientId,

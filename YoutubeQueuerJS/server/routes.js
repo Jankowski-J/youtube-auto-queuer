@@ -5,7 +5,7 @@ var subscriptionsService = require('./youtube-subscriptions-service');
 
 var routesConfig = {};
 
-routesConfig.configure = function (app, port) {
+routesConfig.configure = function(app, port) {
     googleAuth.configure(port);
 
     app.get("/authorize", (req, res) => {
@@ -13,13 +13,13 @@ routesConfig.configure = function (app, port) {
     });
 
     app.get("/authorized", (req, res) => {
-        googleAuth.oauthClient.getToken(req.query.code, function (err, tokens) {
+        googleAuth.oauthClient.getToken(req.query.code, function(err, tokens) {
             if (err) {
                 console.log(err);
                 return;
             }
             googleAuth.oauthClient.setCredentials(tokens);
-            res.redirect("/playlists");
+            res.redirect("/subscriptions");
         });
     });
 
@@ -30,9 +30,13 @@ routesConfig.configure = function (app, port) {
     });
 
     app.get("/api/subscriptions", (req, res) => {
-        subscriptionsService.getSubscriptions(data =>{
+        subscriptionsService.getSubscriptions(data => {
             res.send(JSON.stringify(data));
         });
+    });
+
+    app.get("/subscriptions", (req, res) => {
+        res.sendFile(path.join(__dirname, "/../views/subscriptions.html"));
     });
 
     app.get("/", (req, res) => {
