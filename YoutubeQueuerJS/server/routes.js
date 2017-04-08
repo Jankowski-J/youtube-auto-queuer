@@ -2,37 +2,68 @@ var googleAuth = require('./googleAuth');
 var path = require('path');
 var playlistsService = require('./services/youtube-playlists-service');
 var subscriptionsService = require('./services/youtube-subscriptions-service');
+var fs = require('fs');
 
 var routesConfig = {};
 
+var TOKEN_DIR = path.join((process.env.HOME || process.env.HOMEPATH ||
+    process.env.USERPROFILE), '/.credentials/');
+var TOKEN_PATH = path.join(TOKEN_DIR + 'youtube_queuer_js.json');
+
+function storeToken(token) {
+    try {
+        fs.mkdir(TOKEN_DIR);
+    }
+    catch (error) {
+        if (error.code != 'EEXIST') {
+            throw error;
+        }
+    }
+
+    fs.writeFile(TOKEN_PATH, JSON.stringify(token));
+    console.log('Token stored to ' + TOKEN_PATH);
+}
+
 function setupAuthorizationUrls(app) {
     app.get("/authorize", (req, res) => {
-        res.redirect(googleAuth.authorizationUrl);
+        fs.readFile(TOKEN_PATH, function(error, token) {
+            if (error) {
+                res.redirect(googleAuth.authorizationUrl);
+            } else {
+                googleAuth.oauthClient.credentials = JSON.parse(token);
+                res.redirect("/subscriptions");
+            }
+        });
     });
 
     app.get("/authorized", (req, res) => {
-        googleAuth.oauthClient.getToken(req.query.code, function(err, tokens) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            googleAuth.oauthClient.setCredentials(tokens);
-            res.redirect("/subscriptions");
-        });
+        googleAuth.oauthClient.getToken(req.query.code,
+            function(error, tokens) {
+                if (error) {
+                    console.log(error);
+                    return;
+                }
+                googleAuth.oauthClient.setCredentials(tokens);
+                storeToken(tokens);
+
+                res.redirect("/subscriptions");
+            });
     });
 }
 
 function setupApi(app) {
     app.get("/api/subscriptions", (req, res) => {
-        subscriptionsService.getSubscriptions(data => {
-            res.send(JSON.stringify(data));
-        });
+        subscriptionsService.getSubscriptions()
+            .then(data => {
+                res.send(JSON.stringify(data));
+            });
     });
 
     app.get("/api/playlists", (req, res) => {
-        playlistsService.getPlaylists(data => {
-            res.send(JSON.stringify(data));
-        });
+        playlistsService.getPlaylists()
+            .then(data => {
+                res.send(JSON.stringify(data));
+            });
     });
 }
 

@@ -4,7 +4,14 @@ var youtubeServiceProvider = require('./../youtube-service-provider');
 
 var subscriptionsService = {};
 
-function getSubscriptionsCore(callback, nextPageToken) {
+function toSubscriptionModel(baseSub) {
+    return {
+        channelId: baseSub.snippet.resourceId.channelId,
+        name: baseSub.snippet.title
+    };
+}
+
+function getSubscriptionsCore(nextPageToken) {
     var youtube = youtubeServiceProvider.getYoutubeService();
     var requestParams = {
         part: "id,snippet",
@@ -13,43 +20,49 @@ function getSubscriptionsCore(callback, nextPageToken) {
         pageToken: (!!nextPageToken) ? nextPageToken : null
     };
 
-    return youtube.subscriptions.list(requestParams,
-        (err, subscriptions, response) => {
-            var data;
-            if (err) {
-                console.error('Error while getting subscriptions: ' + err);
-                data = [];
-            }
+    return new Promise((resolve, reject) => {
+        youtube.subscriptions.list(requestParams,
+            (error, subscriptions, response) => {
+                if (error) {
+                    console.error('Error while getting subscriptions: ' + error);
+                    reject(error);
+                }
 
-            if (subscriptions) {
-                data = subscriptions.items.map(e => {
-                    return {
-                        channelId: e.snippet.resourceId.channelId,
-                        name: e.snippet.title
-                    }
-                });
-            }
-            callback(data, subscriptions.nextPageToken);
-        });
+                if (subscriptions) {
+                    var data = subscriptions.items.map(toSubscriptionModel);
+                    var result = {
+                        data,
+                        token: subscriptions.nextPageToken
+                    };
+                    resolve(result);
+                }
+            });
+    });
 }
 
 function getAllSubscriptions(callback) {
     var allData = [];
 
-    var subsCallback = (subs, token) => {
-        allData.push.apply(allData, subs);
-        if(token) {
-            getSubscriptionsCore(subsCallback, token);
-        } else {
-            callback(allData);
-        }
-    };
+    var promise = new Promise((resolve, reject) => {
+        var subsCallback = (subsResult) => {
+            allData.push.apply(allData, subsResult.data);
+            if (subsResult.token) {
+                getSubscriptionsCore(subsResult.token)
+                    .then(r => subsCallback(r))
+                    .catch(error => reject(error));
+            } else {
+                return resolve(allData);
+            }
+        };
+        getSubscriptionsCore()
+            .then(result => subsCallback(result));
+    });
 
-    var subscriptions = getSubscriptionsCore(subsCallback);
+    return promise;
 }
 
-subscriptionsService.getSubscriptions = function(callback) {
-    return getAllSubscriptions(callback);
+subscriptionsService.getSubscriptions = function() {
+    return getAllSubscriptions();
 }
 
 module.exports = subscriptionsService;

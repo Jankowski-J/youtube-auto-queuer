@@ -4,27 +4,34 @@ var youtubeServiceProvider = require('./../youtube-service-provider');
 
 var playlistsService = {};
 
-playlistsService.getPlaylists = function(callback) {
+function toPlaylistModel(basePlaylist) {
+    return {
+        playlistId: basePlaylist.id,
+        name: basePlaylist.snippet.title
+    };
+}
+
+playlistsService.getPlaylists = function() {
     var youtube = youtubeServiceProvider.getYoutubeService();
 
-    return youtube.playlists.list({
+    var requestParams = {
         part: "id,snippet",
-        mine: true
-    }, (err, playlists, response) => {
-        var data;
-        if (err) {
-            console.error('Error while getting playlists: ' + err);
-            playlists = [];
-        }
-        if (playlists) {
-            data = playlists.items.map(e => {
-                return {
-                    playlistId: e.id,
-                    name: e.snippet.title
+        mine: true,
+        maxResults: 50,
+    };
+
+    return new Promise((resolve, reject) => {
+        youtube.playlists.list(requestParams,
+            (error, playlists, response) => {
+                if (error) {
+                    console.error('Error while getting playlists: ' + error);
+                    reject(error);
                 }
+                if (playlists) {
+                    data = playlists.items.map(toPlaylistModel);
+                    resolve(data);
+                }                
             });
-        }
-        callback(data, response, err);
     });
 };
 
