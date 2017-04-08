@@ -5,7 +5,7 @@ var path = require('path');
 
 var app = express();
 
-var scriptsPath = path.join(__dirname, '/../scripts');
+var scriptsPath = path.join(__dirname, '/../client');
 app.use('/scripts', express.static(scriptsPath));
 
 var port = config.port;

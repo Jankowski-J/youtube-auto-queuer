@@ -1,6 +1,6 @@
 var google = require('googleapis');
-var googleAuth = require('./googleAuth');
-var youtubeServiceProvider = require('./youtube-service-provider');
+var googleAuth = require('./../googleAuth');
+var youtubeServiceProvider = require('./../youtube-service-provider');
 
 var playlistsService = {};
 
