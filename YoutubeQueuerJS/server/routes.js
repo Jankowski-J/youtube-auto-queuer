@@ -24,7 +24,7 @@ routesConfig.configure = function(app, port) {
     });
 
     app.get("/api/playlists", (req, res) => {
-        var result = playlistsService.getPlaylists(data => {
+        playlistsService.getPlaylists(data => {
             res.send(JSON.stringify(data));
         });
     });
@@ -37,6 +37,10 @@ routesConfig.configure = function(app, port) {
 
     app.get("/subscriptions", (req, res) => {
         res.sendFile(path.join(__dirname, "/../views/subscriptions.html"));
+    });
+
+    app.get("/playlists", (req, res) => {
+        res.sendFile(path.join(__dirname + "/../views/playlists.html"));
     });
 
     app.get("/", (req, res) => {

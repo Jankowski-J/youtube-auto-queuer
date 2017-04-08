@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Your Youtube subscriptions</title>
+    <title>Your Youtube playlists</title>
 </head>
 
 <body>
@@ -9,21 +9,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
-    <h1>Subscriptions</h1>
+    <h1>Playlists</h1>
     <div>
-        <ul data-bind="foreach: subscriptions">
+        <ul data-bind="foreach: playlists">
             <li>
-                <input type="checkbox" />
                 <span data-bind="text: name"></span>
             </li>
         </ul>
     </div>
-    <script src="/scripts/subscriptions-service.js"></script>
+    <script src="/scripts/playlists-service.js"></script>
     <script type="text/javascript">
-        var service = new Services.SubscriptionsService();
-        var subs = service.getSubscriptions(subs => {
+        var service = new Services.PlaylistsService();
+        var subs = service.getPlaylists(playlists => {
             ko.applyBindings({
-                subscriptions: subs
+                playlists: playlists
             });
         });
     </script>
