@@ -3,6 +3,7 @@ var path = require('path');
 var playlistsService = require('./services/youtube-playlists-service');
 var subscriptionsService = require('./services/youtube-subscriptions-service');
 var fs = require('fs');
+var crypto = require('crypto');
 
 var routesConfig = {};
 
@@ -24,16 +25,41 @@ function storeToken(token) {
     console.log('Token stored to ' + TOKEN_PATH);
 }
 
+function getCredentialsHash() {
+    var credentials = googleAuth.oauthClient.credentials;
+    var stringified = JSON.stringify(credentials);
+    var hash = crypto.createHash('sha256')
+        .update(stringified)
+        .digest('base64');
+
+    return hash;
+}
+
+function setAuthorizedCookie(obj) {
+    var hashed = getCredentialsHash();
+
+    obj.cookie('Authorization', hashed);
+}
+
+function authorize(res, redirectUrl, next) {
+    redirectUrl = redirectUrl || '/subscriptions';
+    fs.readFile(TOKEN_PATH, function(error, token) {
+        if (error) {
+            res.redirect(googleAuth.authorizationUrl);
+        } else {
+            googleAuth.oauthClient.credentials = JSON.parse(token);
+            setAuthorizedCookie(res);
+            if (next) {
+                next();
+            }
+            res.redirect(redirectUrl);
+        }
+    });
+}
+
 function setupAuthorizationUrls(app) {
     app.get("/authorize", (req, res) => {
-        fs.readFile(TOKEN_PATH, function(error, token) {
-            if (error) {
-                res.redirect(googleAuth.authorizationUrl);
-            } else {
-                googleAuth.oauthClient.credentials = JSON.parse(token);
-                res.redirect("/subscriptions");
-            }
-        });
+        authorize(res);
     });
 
     app.get("/authorized", (req, res) => {
@@ -45,8 +71,7 @@ function setupAuthorizationUrls(app) {
                 }
                 googleAuth.oauthClient.setCredentials(tokens);
                 storeToken(tokens);
-
-                res.redirect("/subscriptions");
+                setAuthorizedCookie(res);
             });
     });
 }
@@ -77,9 +102,15 @@ function setupViews(app) {
     });
 }
 
+function authorizationMiddleware(req, res, next) {
+    console.log(req.cookies, res.cookies);
+    next();
+}
+
 routesConfig.configure = function(app, port) {
     googleAuth.configure(port);
 
+    app.use(authorizationMiddleware);
     setupAuthorizationUrls(app);
     setupApi(app);
     setupViews(app);
