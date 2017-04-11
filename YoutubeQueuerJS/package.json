@@ -10,6 +10,7 @@
   "author": "Jakub Jankowski",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
     "googleapis": "^18.0.0"

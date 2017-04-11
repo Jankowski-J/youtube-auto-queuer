@@ -14,6 +14,10 @@
         <ul data-bind="foreach: playlists">
             <li>
                 <span data-bind="text: name"></span>
+                <form action="/api/feedvideos" method="post"> 
+                <input type="hidden" name="playlistId" data-bind="value: playlistId" />
+                <input type="submit" class="uk-button uk-button-primary">Add videos to playlist</input>
+                </form>
             </li>
         </ul>
     </div>
