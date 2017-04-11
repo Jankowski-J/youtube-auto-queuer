@@ -28,11 +28,46 @@ playlistsService.getPlaylists = function() {
                     reject(error);
                 }
                 if (playlists) {
-                    data = playlists.items.map(toPlaylistModel);
+                    var data = playlists.items.map(toPlaylistModel);
                     resolve(data);
-                }                
+                }
             });
     });
 };
+
+playlistsService.addVideosToPlaylist = function(videoIds, playlistId) {
+    var youtube = youtubeServiceProvider.getYoutubeService();
+
+    var videosToAdd = videoIds.map(v => {
+        return {
+            resource: {
+                snippet: {
+                    playlistId: playlistId,
+                    resourceId: {
+                        'videoId': v,
+                        'kind': 'youtube#video',
+                    }
+                }
+            },
+            part: 'id,snippet',
+            resourceId: {
+                'videoId': v,
+                'kind': 'youtube#video',
+            }
+        }
+    });
+
+    for (let videoPayload of videosToAdd) {
+        try {
+            youtube.playlistItems.insert(videoPayload, 
+                function(err, data) {
+                    // TODO: something useful here
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+}
 
 module.exports = playlistsService;

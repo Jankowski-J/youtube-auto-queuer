@@ -6,7 +6,7 @@ namespace YoutubeQueuer.Lib.Providers
     {
         public string PlaylistsListParts => "id,snippet,contentDetails";
         public string InsertPlaylistItemsParts => "id,snippet";
-        public string YoutubePlaylistItemKind => "youtube#playlistIem";
+        public string YoutubePlaylistItemKind => "youtube#playlistItem";
         public string VideoResourceKind => "youtube#video";
         public string ChannelsListParts => "id,snippet,contentDetails";
         public string SubscriptionsListParts => "id,snippet,contentDetails";

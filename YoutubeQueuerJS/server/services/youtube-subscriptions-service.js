@@ -55,7 +55,8 @@ function getAllSubscriptions(callback) {
             }
         };
         getSubscriptionsCore()
-            .then(result => subsCallback(result));
+            .then(result => subsCallback(result))
+            .catch(error => console.log(error));
     });
 
     return promise;
