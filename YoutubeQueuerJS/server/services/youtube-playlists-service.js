@@ -2,6 +2,7 @@ var google = require('googleapis');
 var googleAuth = require('./../googleAuth');
 var youtubeServiceProvider = require('./../youtube-service-provider');
 
+
 var playlistsService = {};
 
 function toPlaylistModel(basePlaylist) {
@@ -36,6 +37,7 @@ playlistsService.getPlaylists = function() {
 };
 
 playlistsService.addVideosToPlaylist = function(videoIds, playlistId) {
+    "use strict";
     var youtube = youtubeServiceProvider.getYoutubeService();
 
     var videosToAdd = videoIds.map(v => {

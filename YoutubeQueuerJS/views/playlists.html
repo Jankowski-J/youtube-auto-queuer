@@ -12,13 +12,17 @@
     <h1>Playlists</h1>
     <div>
         <ul data-bind="foreach: playlists">
-            <li>
-                <span data-bind="text: name"></span>
-                <form action="/api/feedvideos" method="post"> 
-                <input type="hidden" name="playlistId" data-bind="value: playlistId" />
-                <input type="submit" class="uk-button uk-button-primary">Add videos to playlist</input>
-                </form>
-            </li>
+            <form action="/api/feedvideos" method="post">
+                <div class="uk-grid">               
+                    <div class="uk-width-1-6">
+                        <span data-bind="text: name"></span>
+                        <input type="hidden" name="playlistId" data-bind="value: playlistId" />
+                    </div>
+                    <div class="uk-wdith-1-6">
+                        <button type="submit" class="uk-button uk-button-primary">Add videos to playlist</button>
+                    </div>
+                </div>
+            </form>
         </ul>
     </div>
     <script src="/scripts/playlists-service.js"></script>

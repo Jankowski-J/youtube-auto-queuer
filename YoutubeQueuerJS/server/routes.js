@@ -81,6 +81,7 @@ function setupAuthorizationUrls(app) {
 }
 
 function setupApi(app) {
+    "use strict";
     app.get("/api/subscriptions", (req, res) => {
         subscriptionsService.getSubscriptions()
             .then(data => {
