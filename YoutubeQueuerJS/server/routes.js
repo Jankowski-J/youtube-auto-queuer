@@ -1,4 +1,4 @@
-var googleAuth = require('./googleAuth');
+var googleAuth = require('./google-auth');
 var path = require('path');
 var fs = require('fs');
 var crypto = require('crypto');
@@ -111,6 +111,10 @@ function setupApi(app) {
                 }
             });
     })
+
+    app.post("/api/subscriptions/", (req, res) => {
+        res.status(200).end();
+    });
 }
 
 function setupViews(app) {
@@ -123,15 +127,10 @@ function setupViews(app) {
     });
 }
 
-function authorizationMiddleware(req, res, next) {
-    console.log(req.cookies, res.cookies);
-    next();
-}
-
 routesConfig.configure = function(app, port) {
     googleAuth.configure(port);
 
-    app.use(authorizationMiddleware);
+    app.use(googleAuth.middleware);
     setupAuthorizationUrls(app);
     setupApi(app);
     setupViews(app);
@@ -140,7 +139,5 @@ routesConfig.configure = function(app, port) {
         res.sendFile(path.join(__dirname, "/../index.html"));
     });
 };
-
-
 
 module.exports = routesConfig;

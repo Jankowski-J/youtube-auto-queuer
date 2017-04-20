@@ -26,4 +26,9 @@ authService.configure = function(port) {
     authService.oauthClient = oauth2Client;
 }
 
+authService.middleware = function (req, res, next) {
+    // TODO: implement correct authorization middleware
+    next();
+}
+
 module.exports = authService;

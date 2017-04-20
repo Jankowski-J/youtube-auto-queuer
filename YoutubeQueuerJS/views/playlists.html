@@ -9,11 +9,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+    <nav class="uk-navbar">
+        <ul class="uk-navbar-nav">
+            <li><a href="/playlists">Playlists</a></li>
+            <li><a href="/subscriptions">Subscriptions</a></li>
+        </ul>
+    </nav>
     <h1>Playlists</h1>
     <div>
         <ul data-bind="foreach: playlists">
             <form action="/api/feedvideos" method="post">
-                <div class="uk-grid">               
+                <div class="uk-grid">
                     <div class="uk-width-1-6">
                         <span data-bind="text: name"></span>
                         <input type="hidden" name="playlistId" data-bind="value: playlistId" />

@@ -9,23 +9,47 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+    <nav class="uk-navbar">
+        <ul class="uk-navbar-nav">
+            <li><a href="/playlists">Playlists</a></li>
+            <li><a href="/subscriptions">Subscriptions</a></li>
+        </ul>
+    </nav>
     <h1>Subscriptions</h1>
     <div>
         <ul data-bind="foreach: subscriptions">
             <li>
-                <input type="checkbox" />
+                <input type="checkbox" data-bind="checked: isIncluded, checkedValue: channelId" />
                 <span data-bind="text: name"></span>
             </li>
         </ul>
+        <button class="uk-button uk-button-primary" onclick="saveSubscriptions()">Save changes</button>
     </div>
     <script src="/scripts/subscriptions-service.js"></script>
     <script type="text/javascript">
         var service = new Services.SubscriptionsService();
-        var subs = service.getSubscriptions(subs => {
-            ko.applyBindings({
-                subscriptions: subs
+        var viewModel = {};
+        var subs = service.getSubscriptions()
+            .then(subs => {
+                viewModel = {
+                    subscriptions: subs
+                    //chosenItems: ko.observableArray(subs.map(s => s.channelId))
+                };
+                ko.applyBindings(viewModel);
             });
-        });
+
+        function saveSubscriptions() {
+            var data = JSON.stringify(viewModel);
+
+            fetch("/api/subscriptions", {
+                method: "POST",
+                body: data
+            }).then(res => {
+                console.log("success");
+            }).catch(error => {
+                console.log("Error while saving subscriptions:", error);
+            });
+        }
     </script>
 </body>
 
