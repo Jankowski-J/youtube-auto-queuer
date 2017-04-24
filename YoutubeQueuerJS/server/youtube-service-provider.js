@@ -9,6 +9,8 @@ var initializeYoutubeService = function() {
         auth: googleAuth.oauthClient
     });
 
+    //var people = google.people("v1");
+
     return yt;
 };
 

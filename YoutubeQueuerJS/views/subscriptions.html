@@ -41,9 +41,14 @@
         function saveSubscriptions() {
             var data = JSON.stringify(viewModel);
 
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
             fetch("/api/subscriptions", {
                 method: "POST",
-                body: data
+                body: data,
+                contentType: "application/json",
+                headers: myHeaders
             }).then(res => {
                 console.log("success");
             }).catch(error => {

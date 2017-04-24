@@ -113,6 +113,7 @@ function setupApi(app) {
     })
 
     app.post("/api/subscriptions/", (req, res) => {
+        subscriptionsService.saveSubscriptionsSettings(req.body);
         res.status(200).end();
     });
 }
