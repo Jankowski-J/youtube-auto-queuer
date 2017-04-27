@@ -101,13 +101,17 @@ function setupApi(app) {
 
         subscriptionsService.getSubscriptions()
             .then(subs => {
-                for (let sub of subs) {
+                var validSubs = subs.filter(s => s.isIncluded);
+
+                for (let sub of validSubs) {
                     videosService.getLatestVideosFromChannel(sub.channelId)
                         .then(videos => {
                             var ids = videos.map(v => v.id);
 
                             playlistsService.addVideosToPlaylist(ids, playlistId);
-                        });
+                        })
+                        .catch(error =>
+                            console.log('An error occured while getting videos from channel: ' + error));
                 }
             });
     })

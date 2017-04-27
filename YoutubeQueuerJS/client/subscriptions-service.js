@@ -8,4 +8,3 @@ Services.SubscriptionsService = function SubscriptionsService() {
     };
     return that;
 }
-

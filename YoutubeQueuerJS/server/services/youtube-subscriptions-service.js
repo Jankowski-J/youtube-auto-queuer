@@ -22,7 +22,7 @@ function toSubscriptionModel(baseSub, settings) {
 function getSubscriptionsCore(subscriptionsSettings, nextPageToken) {
     var youtube = youtubeServiceProvider.getYoutubeService();
     var requestParams = {
-        part: "id,snippet",
+        part: 'id,snippet',
         mine: true,
         maxResults: 50,
         pageToken: (!!nextPageToken) ? nextPageToken : null
@@ -30,7 +30,7 @@ function getSubscriptionsCore(subscriptionsSettings, nextPageToken) {
 
     subscriptionsSettings = subscriptionsSettings || [];
 
-    return new Promise((resolve, reject) => {
+    var subscriptionsPromise = new Promise((resolve, reject) => {
         youtube.subscriptions.list(requestParams,
             (error, subscriptions, response) => {
                 if (error) {
@@ -39,7 +39,8 @@ function getSubscriptionsCore(subscriptionsSettings, nextPageToken) {
                 }
 
                 if (subscriptions) {
-                    var data = subscriptions.items.map(s => toSubscriptionModel(s, subscriptionsSettings));
+                    var data = subscriptions.items
+                        .map(s => toSubscriptionModel(s, subscriptionsSettings));
                     var result = {
                         data,
                         token: subscriptions.nextPageToken
@@ -48,10 +49,12 @@ function getSubscriptionsCore(subscriptionsSettings, nextPageToken) {
                 }
             });
     });
+
+    return subscriptionsPromise;
 }
 
 var getSettingsFilePath = function() {
-    return path.join(process.env.APPDATA, "/subscriptions_settings.json")
+    return path.join(process.env.APPDATA, '/subscriptions_settings.json')
 };
 
 var saveSubscriptionsSettings = function(settings) {
@@ -59,8 +62,10 @@ var saveSubscriptionsSettings = function(settings) {
     var serialized = JSON.stringify(filtered);
     var filePath = getSettingsFilePath();
 
-    fs.writeFile(filePath, serialized, err => {
-        console.log("An error has occured while saving subscriptions settings:", err);
+    fs.writeFile(filePath, serialized, error => {
+        if (error) {
+            console.log('An error has occured while saving subscriptions settings:', error);
+        }
     });
 };
 
@@ -82,7 +87,7 @@ var loadSubscriptionsSettings = function() {
     return promise;
 }
 
-function getAllSubscriptions(callback) {
+function getAllSubscriptions() {
     var allData = [];
 
     var loadSubscriptionsWithSettings = function(settings) {
@@ -105,7 +110,7 @@ function getAllSubscriptions(callback) {
         return promise;
     }
 
-    var subscriptionsPromise = loadSubscriptionsSettings()        
+    var subscriptionsPromise = loadSubscriptionsSettings()
         .then(loadSubscriptionsWithSettings);
 
     return subscriptionsPromise;
