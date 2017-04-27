@@ -1,4 +1,4 @@
-var googleAuth = require('./googleAuth');
+var googleAuth = require('./google-auth');
 var path = require('path');
 var fs = require('fs');
 var crypto = require('crypto');
@@ -101,16 +101,25 @@ function setupApi(app) {
 
         subscriptionsService.getSubscriptions()
             .then(subs => {
-                for (let sub of subs) {
+                var validSubs = subs.filter(s => s.isIncluded);
+
+                for (let sub of validSubs) {
                     videosService.getLatestVideosFromChannel(sub.channelId)
                         .then(videos => {
                             var ids = videos.map(v => v.id);
 
                             playlistsService.addVideosToPlaylist(ids, playlistId);
-                        });
+                        })
+                        .catch(error =>
+                            console.log('An error occured while getting videos from channel: ' + error));
                 }
             });
     })
+
+    app.post("/api/subscriptions/", (req, res) => {
+        subscriptionsService.saveSubscriptionsSettings(req.body);
+        res.status(200).end();
+    });
 }
 
 function setupViews(app) {
@@ -123,15 +132,10 @@ function setupViews(app) {
     });
 }
 
-function authorizationMiddleware(req, res, next) {
-    console.log(req.cookies, res.cookies);
-    next();
-}
-
 routesConfig.configure = function(app, port) {
     googleAuth.configure(port);
 
-    app.use(authorizationMiddleware);
+    app.use(googleAuth.middleware);
     setupAuthorizationUrls(app);
     setupApi(app);
     setupViews(app);
@@ -140,7 +144,5 @@ routesConfig.configure = function(app, port) {
         res.sendFile(path.join(__dirname, "/../index.html"));
     });
 };
-
-
 
 module.exports = routesConfig;

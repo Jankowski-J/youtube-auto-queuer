@@ -7,7 +7,9 @@ var OAuth2 = google.auth.OAuth2;
 
 var scopes = [
     'https://www.googleapis.com/auth/youtube',
-    'https://www.googleapis.com/auth/youtube.force-ssl'
+    'https://www.googleapis.com/auth/youtube.force-ssl',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile'
 ];
 
 authService.configure = function(port) {
@@ -24,6 +26,11 @@ authService.configure = function(port) {
     });
 
     authService.oauthClient = oauth2Client;
+}
+
+authService.middleware = function (req, res, next) {
+    // TODO: implement correct authorization middleware
+    next();
 }
 
 module.exports = authService;

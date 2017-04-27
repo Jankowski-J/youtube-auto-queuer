@@ -1,5 +1,5 @@
 var google = require('googleapis');
-var googleAuth = require('./googleAuth')
+var googleAuth = require('./google-auth')
 
 var youtube = undefined;
 
@@ -8,6 +8,8 @@ var initializeYoutubeService = function() {
         version: 'v3',
         auth: googleAuth.oauthClient
     });
+
+    //var people = google.people("v1");
 
     return yt;
 };

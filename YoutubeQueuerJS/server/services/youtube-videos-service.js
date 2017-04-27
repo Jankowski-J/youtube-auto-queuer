@@ -1,5 +1,5 @@
 var google = require('googleapis');
-var googleAuth = require('./../googleAuth');
+var googleAuth = require('./../google-auth');
 var youtubeServiceProvider = require('./../youtube-service-provider');
 
 var videosService = {};
@@ -12,17 +12,17 @@ function toVideoModel(baseVideo) {
     };
 }
 
-videosService.getLatestVideosFromChannel = function getLatestVideosFromChannel(channelId) {
+videosService.getLatestVideosFromChannel = function(channelId) {
     var youtube = youtubeServiceProvider.getYoutubeService();
 
     var requestParams = {
-        part: "id,snippet",
+        part: 'id,snippet',
         mine: true,
         maxResults: 50,
         order: 'date'
     };
 
-    return new Promise((resolve, reject) => {
+    var videosPromise = new Promise((resolve, reject) => {
         youtube.search.list(requestParams,
             (error, videos, response) => {
                 if (error) {
@@ -36,6 +36,8 @@ videosService.getLatestVideosFromChannel = function getLatestVideosFromChannel(c
                 }
             });
     });
+
+    return videosPromise;
 }
 
 module.exports = videosService;
