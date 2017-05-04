@@ -29,6 +29,10 @@ playlistsService.getPlaylists = function() {
                 }
                 if (playlists) {
                     var data = playlists.items.map(toPlaylistModel);
+                    data.unshift({
+                        playlistId: "WL",
+                        name: "Watch later"
+                    });
                     resolve(data);
                 }
             });

@@ -45,19 +45,7 @@ function setAuthorizedCookie(obj) {
 }
 
 function authorize(res, redirectUrl, next) {
-    // redirectUrl = redirectUrl || '/subscriptions';
-    // fs.readFile(TOKEN_PATH, function(error, token) {
-    //     if (error) {
     res.redirect(googleAuth.authorizationUrl);
-    //     } else {
-    //         googleAuth.oauthClient.credentials = JSON.parse(token);
-    //         setAuthorizedCookie(res);
-    //         if (next) {
-    //             next();
-    //         }
-    //         res.redirect(redirectUrl);
-    //     }
-    // });
 }
 
 function setupAuthorizationUrls(app) {
@@ -103,16 +91,23 @@ function setupApi(app) {
             .then(subs => {
                 var validSubs = subs.filter(s => s.isIncluded);
 
-                for (let sub of validSubs) {
-                    videosService.getLatestVideosFromChannel(sub.channelId)
-                        .then(videos => {
-                            var ids = videos.map(v => v.id);
+                var promises = validSubs.map(sub => {
+                    return function() {
+                        return videosService.getLatestVideosFromChannel(sub.channelId)
+                            .then(videos => {
+                                var ids = videos.map(v => v.id);
 
-                            playlistsService.addVideosToPlaylist(ids, playlistId);
-                        })
-                        .catch(error =>
-                            console.log('An error occured while getting videos from channel: ' + error));
-                }
+                                playlistsService.addVideosToPlaylist(ids, playlistId);
+                            })
+                            .catch(error =>
+                                console.log('An error occured while getting videos from channel: ' + error));
+                    }
+                });
+
+                promises.reduce((cur, next) => {
+                    return cur.then(next);
+                }, Promise.resolve())
+                    .then(() => { });
             });
     })
 

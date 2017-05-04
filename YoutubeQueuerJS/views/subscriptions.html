@@ -33,7 +33,6 @@
             .then(subs => {
                 viewModel = {
                     subscriptions: subs
-                    //chosenItems: ko.observableArray(subs.map(s => s.channelId))
                 };
                 ko.applyBindings(viewModel);
             });
@@ -41,16 +40,14 @@
         function saveSubscriptions() {
             var data = JSON.stringify(viewModel);
 
-            var myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
+            var headers = new Headers();
+            headers.append("Content-Type", "application/json");
 
             fetch("/api/subscriptions", {
                 method: "POST",
                 body: data,
                 contentType: "application/json",
-                headers: myHeaders
-            }).then(res => {
-                console.log("success");
+                headers
             }).catch(error => {
                 console.log("Error while saving subscriptions:", error);
             });

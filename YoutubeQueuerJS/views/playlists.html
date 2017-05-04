@@ -18,25 +18,42 @@
     <h1>Playlists</h1>
     <div>
         <ul data-bind="foreach: playlists">
-            <form action="/api/feedvideos" method="post">
-                <div class="uk-grid">
-                    <div class="uk-width-1-6">
-                        <span data-bind="text: name"></span>
-                        <input type="hidden" name="playlistId" data-bind="value: playlistId" />
-                    </div>
-                    <div class="uk-wdith-1-6">
-                        <button type="submit" class="uk-button uk-button-primary">Add videos to playlist</button>
-                    </div>
+            <div class="uk-grid">
+                <div class="uk-width-1-6">
+                    <span data-bind="text: name"></span>
+                    <input type="hidden" name="playlistId" data-bind="value: playlistId" />
                 </div>
-            </form>
+                <div class="uk-wdith-1-6">
+                    <button type="submit" class="uk-button uk-button-primary" data-bind="click: feedVideos.bind(null, playlistId)">Add videos to playlist</button>
+                </div>
+            </div>
         </ul>
     </div>
     <script src="/scripts/playlists-service.js"></script>
     <script type="text/javascript">
         var service = new Services.PlaylistsService();
+        function feedVideos(playlistId) {
+            var model = { playlistId };
+
+            var data = JSON.stringify(model);
+
+            var headers = new Headers();
+            headers.append("Content-Type", "application/json");
+
+            fetch("/api/feedvideos", {
+                method: "POST",
+                body: data,
+                contentType: "application/json",
+                headers
+            }).catch(error => {
+                console.log("Error while feeding videos:", error);
+            });
+        }
+
         var subs = service.getPlaylists(playlists => {
             ko.applyBindings({
-                playlists: playlists
+                playlists: playlists,
+                feedVideos
             });
         });
     </script>

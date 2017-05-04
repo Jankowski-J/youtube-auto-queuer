@@ -12,15 +12,18 @@ function toVideoModel(baseVideo) {
     };
 }
 
-videosService.getLatestVideosFromChannel = function(channelId) {
+videosService.getLatestVideosFromChannel = function(channelId, maxDate) {
     var youtube = youtubeServiceProvider.getYoutubeService();
 
     var requestParams = {
         part: 'id,snippet',
-        mine: true,
-        maxResults: 50,
-        order: 'date'
+        maxResults: 5,
+        order: 'date',
+        channelId: channelId
     };
+
+    maxDate = maxDate || new Date();
+    maxDate.setHours(0, 0, 0, 0);
 
     var videosPromise = new Promise((resolve, reject) => {
         youtube.search.list(requestParams,
@@ -32,7 +35,11 @@ videosService.getLatestVideosFromChannel = function(channelId) {
 
                 if (videos) {
                     var data = videos.items.map(toVideoModel);
-                    resolve([data[0]]);
+                    var filtered = data.filter(x => x.publishedAt >= maxDate);
+                    if (filtered.length > 0) {
+                        console.log("raw data:", data.length, "filtered:", filtered.length);
+                    }
+                    resolve(filtered);
                 }
             });
     });
