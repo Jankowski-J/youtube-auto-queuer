@@ -46,7 +46,6 @@
             fetch("/api/subscriptions", {
                 method: "POST",
                 body: data,
-                contentType: "application/json",
                 headers
             }).catch(error => {
                 console.log("Error while saving subscriptions:", error);

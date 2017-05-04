@@ -9,23 +9,52 @@ var videosService = require('./services/youtube-videos-service');
 
 var routesConfig = {};
 
-var TOKEN_DIR = path.join((process.env.HOME || process.env.HOMEPATH ||
-    process.env.USERPROFILE), '/.credentials/');
-var TOKEN_PATH = path.join(TOKEN_DIR + 'youtube_queuer_js.json');
+var TOKEN_DIR = path.join(process.env.APPDATA, '/.credentials/');
+var TOKEN_PATH = path.join(TOKEN_DIR, 'youtube_queuer_js.json');
+
+function ensureTokenDirExists() {
+    var promise = new Promise((resolve, reject) => {
+        fs.exists(TOKEN_DIR, exists => {
+            if (!exists) {
+                fs.mkdir(TOKEN_DIR);
+            }
+
+            resolve();
+        });
+    });
+    return promise;
+}
 
 function storeToken(token) {
-    // try {
-    //     fs.mkdir(TOKEN_DIR);
-    // }
-    // catch (error) {
-    //     console.log(error);
-    //     if (error.code != 'EEXIST') {
-    //         throw error;
-    //     }
-    // }
+    ensureTokenDirExists().then(() => {
+        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (error, data) => {
+            if (error) {
+                console.log('Error while storing token:', error);
+            }
+            if (data) {
+                console.log('Token stored to ' + TOKEN_PATH);
+            }
+        });
+    });
+}
 
-    // fs.writeFile(TOKEN_PATH, JSON.stringify(token));
-    // console.log('Token stored to ' + TOKEN_PATH);
+function readToken() {
+    var promise = new Promise((resolve, reject) => {
+        fs.readFile(TOKEN_PATH, (error, data) => {
+            if (error) {
+                console.error('Error while reading token from file:', error);
+                reject(error);
+            }
+            if (data && data.length > 0) {
+                var serialized = data.toString();
+                var parsed = JSON.parse(serialized);
+                resolve(parsed);
+            }
+            reject("Invalid authorization token");
+        });
+    });
+
+    return promise;
 }
 
 function getCredentialsHash() {
@@ -40,29 +69,39 @@ function getCredentialsHash() {
 
 function setAuthorizedCookie(obj) {
     var hashed = getCredentialsHash();
-
     obj.cookie('Authorization', hashed);
 }
 
+function setSessionToken(token) {
+    googleAuth.oauthClient.setCredentials(token);
+}
+
 function authorize(res, redirectUrl, next) {
-    res.redirect(googleAuth.authorizationUrl);
+    var token = readToken()
+        .then(token => {
+            setSessionToken(token);
+            res.redirect(redirectUrl)
+        })
+        .catch(error => {
+            res.redirect(googleAuth.authorizationUrl);
+        });
 }
 
 function setupAuthorizationUrls(app) {
-    app.get("/authorize", (req, res) => {
-        authorize(res);
+    app.get('/authorize', (req, res) => {
+        authorize(res, '/playlists');
     });
 
-    app.get("/authorized", (req, res) => {
+    app.get('/authorized', (req, res) => {
         googleAuth.oauthClient.getToken(req.query.code,
-            function(error, tokens) {
+            function(error, token) {
                 if (error) {
                     console.log(error);
                     return;
                 }
-                googleAuth.oauthClient.setCredentials(tokens);
-                storeToken(tokens);
-                setAuthorizedCookie(res);
+
+                storeToken(token);
+                setSessionToken(token);
                 res.redirect('/playlists');
             });
     });

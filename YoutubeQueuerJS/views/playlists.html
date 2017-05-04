@@ -35,7 +35,7 @@
         function feedVideos(playlistId) {
             var model = { playlistId };
 
-            var data = JSON.stringify(model);
+            var data = JSON.stringify(model);s
 
             var headers = new Headers();
             headers.append("Content-Type", "application/json");
@@ -43,7 +43,6 @@
             fetch("/api/feedvideos", {
                 method: "POST",
                 body: data,
-                contentType: "application/json",
                 headers
             }).catch(error => {
                 console.log("Error while feeding videos:", error);
