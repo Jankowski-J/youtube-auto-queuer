@@ -30,11 +30,6 @@ authService.configure = function(port) {
     authService.oauthClient = oauth2Client;
 }
 
-authService.middleware = function(req, res, next) {
-    // TODO: implement correct authorization middleware
-    next();
-}
-
 var TOKEN_DIR = path.join(process.env.APPDATA, '/.credentials/');
 var TOKEN_PATH = path.join(TOKEN_DIR, 'youtube_queuer_js.json');
 
@@ -103,7 +98,7 @@ function setSessionToken(token) {
 }
 
 function authorize(res, redirectUrl) {
-    var token = readToken()
+    readToken()
         .then(token => {
             setSessionToken(token);
             res.redirect(redirectUrl)
@@ -111,6 +106,20 @@ function authorize(res, redirectUrl) {
         .catch(error => {
             res.redirect(authService.authorizationUrl);
         });
+}
+
+function areSessionCredentialsValid() {
+    var isTokenPresent = !!authService.oauthClient && !!authService.oauthClient.credentials
+        && !!authService.oauthClient.credentials.access_token;
+
+    if (!isTokenPresent) {
+        return false;
+    }
+
+    var expiryDate = authService.oauthClient.credentials.expiry_date;
+    var date = new Date(expiryDate);
+
+    return date > new Date();
 }
 
 function handleAuthorizationResponse(request, response) {
@@ -125,6 +134,21 @@ function handleAuthorizationResponse(request, response) {
             setSessionToken(token);
             response.redirect('/playlists');
         });
+}
+
+authService.middleware = function(req, res, next) {
+    if (areSessionCredentialsValid()) {
+        next();
+        return;
+    }
+    readToken().then(token => {
+        if (token) {
+            setSessionToken(token);
+            next();
+        }
+    }).catch(error => {
+        res.redirect(authService.authorizationUrl);
+    });
 }
 
 authService.authorize = authorize;
