@@ -24,7 +24,18 @@
                     <input type="hidden" name="playlistId" data-bind="value: playlistId" />
                 </div>
                 <div class="uk-wdith-1-6">
-                    <button type="submit" class="uk-button uk-button-primary" data-bind="click: feedVideos.bind(null, playlistId)">Add videos to playlist</button>
+                    <button class="uk-button uk-button-primary" data-bind="click: feedVideos.bind(null, playlistId)">Add videos to playlist</button>
+                </div>
+                <div class="uk-width-1-6">
+                    <div data-bind="if: !scheduledTime()">
+                        <button class="uk-button uk-button-primary" data-bind="click: addScheduledTime">Schedule automatic feed</button>
+                    </div>
+                    <div data-bind="if: !!scheduledTime()">
+                        <select data-bind="foreach: hours">
+                        <option data-bind="value: $data, text: $data" ></option>
+                        </select>
+                        <button class="uk-button uk-button-primary" >Save scheduled time</button>
+                    </div>
                 </div>
             </div>
         </ul>
@@ -35,24 +46,39 @@
         function feedVideos(playlistId) {
             var model = { playlistId };
 
-            var data = JSON.stringify(model);s
+            var data = JSON.stringify(model);
 
             var headers = new Headers();
             headers.append("Content-Type", "application/json");
 
-            fetch("/api/feedvideos", {
-                method: "POST",
+            fetch('/api/feedvideos', {
+                method: 'POST',
                 body: data,
                 headers
             }).catch(error => {
-                console.log("Error while feeding videos:", error);
+                console.log('Error while feeding videos:', error);
             });
         }
 
+        function addScheduledTime(obj) {
+            obj.scheduledTime("00:00");
+        }
+
+        var hours = [...Array(24).keys()].map(n => n + ':00');
+
         var subs = service.getPlaylists(playlists => {
+            var observablePlaylists = playlists.map(p => {
+                return {
+                    playlistId: ko.observable(p.playlistId),
+                    name: p.name,
+                    scheduledTime: ko.observable(p.scheduledTime)
+                }
+            });
             ko.applyBindings({
-                playlists: playlists,
-                feedVideos
+                playlists: ko.observableArray(observablePlaylists),
+                feedVideos,
+                addScheduledTime,
+                hours
             });
         });
     </script>

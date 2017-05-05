@@ -7,7 +7,8 @@ var playlistsService = {};
 function toPlaylistModel(basePlaylist) {
     return {
         playlistId: basePlaylist.id,
-        name: basePlaylist.snippet.title
+        name: basePlaylist.snippet.title,
+        scheduledTime: null
     };
 }
 
@@ -31,7 +32,8 @@ playlistsService.getPlaylists = function() {
                     var data = playlists.items.map(toPlaylistModel);
                     data.unshift({
                         playlistId: "WL",
-                        name: "Watch later"
+                        name: "Watch later",
+                        scheduledTime: null
                     });
                     resolve(data);
                 }

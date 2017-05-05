@@ -122,6 +122,13 @@ function areSessionCredentialsValid() {
     return date > new Date();
 }
 
+function areCredentialsValid(credentials) {
+    var expiryDate = credentials.expiry_date;
+    var date = new Date(expiryDate);
+
+    return date > new Date();
+}
+
 function handleAuthorizationResponse(request, response) {
     authService.oauthClient.getToken(request.query.code,
         function(error, token) {
@@ -137,12 +144,18 @@ function handleAuthorizationResponse(request, response) {
 }
 
 authService.middleware = function(req, res, next) {
-    if (areSessionCredentialsValid()) {
+    var isBeingAuthorized = req.originalUrl.indexOf('/Authorized') !== -1;
+
+    if (isBeingAuthorized || areSessionCredentialsValid()) {
         next();
         return;
     }
     readToken().then(token => {
         if (token) {
+            if(!areCredentialsValid(token)) {
+                res.redirect(authService.authorizationUrl);
+                return;
+            }
             setSessionToken(token);
             next();
         }
