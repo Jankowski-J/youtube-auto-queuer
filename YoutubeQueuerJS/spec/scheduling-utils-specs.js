@@ -1,4 +1,4 @@
-var schedulingUtils = require('../../server/scheduling/scheduling-utils');
+var schedulingUtils = require('../server/scheduling/scheduling-utils');
 
 describe('createScheduleTimesForHour for one schedule time', function() {
     it('should return correct date', function() {
