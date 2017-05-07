@@ -4,7 +4,7 @@
   "description": "A utility for automated adding of videos from subscriptions to playlists.",
   "main": "server/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jasmine",
     "start": "node server/main.js",
     "start:alt": "nodejs server/main.js"
   },

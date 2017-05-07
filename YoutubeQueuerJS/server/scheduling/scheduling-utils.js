@@ -1,0 +1,3 @@
+function createScheduleTimesForHour(hour, schedulesCount) {
+
+}
