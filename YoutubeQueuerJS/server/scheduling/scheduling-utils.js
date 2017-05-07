@@ -16,6 +16,6 @@ function createScheduleTimesForHour(hour, schedulesCount) {
 
 var schedulingUtils = {
     createScheduleTimesForHour
-};
+}
 
 module.exports = schedulingUtils;
