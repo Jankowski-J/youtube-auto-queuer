@@ -66,10 +66,16 @@ playlistsService.addVideosToPlaylist = function(videoIds, playlistId) {
 
     for (let videoPayload of videosToAdd) {
         try {
-            youtube.playlistItems.insert(videoPayload, 
-                function(err, data) {
-                    // TODO: something useful here
-            });
+            youtube.playlistItems.insert(videoPayload,
+                function(error, data) {
+                    if (error) {
+                        if (error.code !== 409) {
+                            console.log('error while adding videos to playlist:', error);
+                        } else {
+                            console.log('Video already in playlist');
+                        }
+                    }
+                });
         }
         catch (error) {
             console.log(error);

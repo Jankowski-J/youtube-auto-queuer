@@ -24,7 +24,7 @@
                     <input type="hidden" name="playlistId" data-bind="value: playlistId" />
                 </div>
                 <div class="uk-wdith-1-6">
-                    <button class="uk-button uk-button-primary" data-bind="click: feedVideos.bind(null, playlistId)">Add videos to playlist</button>
+                    <button class="uk-button uk-button-primary" data-bind="click: feedVideos">Add videos to playlist</button>
                 </div>
                 <div class="uk-width-1-6">
                     <div data-bind="if: !scheduledTime()">
@@ -43,8 +43,8 @@
     <script src="/scripts/playlists-service.js"></script>
     <script type="text/javascript">
         var service = new Services.PlaylistsService();
-        function feedVideos(playlistId) {
-            var model = { playlistId };
+        function feedVideos(playlist) {
+            var model = { playlistId: playlist.playlistId() };
 
             var data = JSON.stringify(model);
 
