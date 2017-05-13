@@ -2,6 +2,7 @@ var google = require('googleapis');
 var authConfig = require("./google-auth-config");
 var path = require('path');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 var authService = {};
 
@@ -30,18 +31,21 @@ authService.configure = function(port) {
     authService.oauthClient = oauth2Client;
 }
 
-var TOKEN_DIR = path.join(process.env.APPDATA, '/.credentials/');
+var TOKEN_DIR = path.join(process.env.APPDATA, '/YoutubeQueuer/credentials/');
 var TOKEN_PATH = path.join(TOKEN_DIR, 'youtube_queuer_js.json');
 
 function ensureTokenDirExists() {
+
     var promise = new Promise((resolve, reject) => {
-        fs.exists(TOKEN_DIR, exists => {
-            if (!exists) {
-                fs.mkdir(TOKEN_DIR);
+        var pathName = path.dirname(TOKEN_DIR);
+        fs.exists(pathName, exists => {
+            if (exists) {
+                resolve();
             }
 
+            mkdirp.sync(pathName);
             resolve();
-        });
+        })
     });
     return promise;
 }
@@ -152,7 +156,7 @@ authService.middleware = function(req, res, next) {
     }
     readToken().then(token => {
         if (token) {
-            if(!areCredentialsValid(token)) {
+            if (!areCredentialsValid(token)) {
                 res.redirect(authService.authorizationUrl);
                 return;
             }

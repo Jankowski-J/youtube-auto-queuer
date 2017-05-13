@@ -1,8 +1,9 @@
 var path = require('path');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 function getSettingsFilePath() {
-    return path.join(process.env.APPDATA, '/scheduling_settings.json')
+    return path.join(process.env.APPDATA, '/YoutubeQueuer/scheduling_settings.json')
 };
 
 function readSettings() {
@@ -27,11 +28,18 @@ function readSettings() {
 
 function saveSettings(settings) {
     var filePath = getSettingsFilePath();
+    var pathName = path.dirname(filePath);
     var serialized = JSON.stringify(settings);
-    fs.writeFile(filePath, serialized, error => {
-        if (error) {
-            console.log('An error has occured while saving scheduling settings:', error);
+    fs.exists(pathName, exists => {
+        if (exists) {
+            mkdirp.sync(pathName);
         }
+
+        fs.writeFile(filePath, serialized, error => {
+            if (error) {
+                console.log('An error has occured while saving scheduling settings:', error);
+            }
+        });
     });
 }
 
@@ -62,8 +70,13 @@ function saveFeedTimeForPlaylist(playlistId, scheduledTime) {
         });
 }
 
+function getScheduledTimesForPlaylists() {
+    return readSettings();
+}
+
 var feedSchedulingService = {
-    saveFeedTimeForPlaylist: saveFeedTimeForPlaylist
+    saveFeedTimeForPlaylist: saveFeedTimeForPlaylist,
+    getScheduledTimesForPlaylists: getScheduledTimesForPlaylists
 };
 
 module.exports = feedSchedulingService;
