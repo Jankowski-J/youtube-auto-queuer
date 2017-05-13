@@ -10,7 +10,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var scriptsPath = path.join(__dirname, '/../client');
+var scriptsPath = path.join(__dirname, '/../client/scripts');
 app.use('/scripts', express.static(scriptsPath));
 
 var port = config.port;

@@ -26,32 +26,7 @@
         <button class="uk-button uk-button-primary" onclick="saveSubscriptions()">Save changes</button>
     </div>
     <script src="/scripts/subscriptions-service.js"></script>
-    <script type="text/javascript">
-        var service = new Services.SubscriptionsService();
-        var viewModel = {};
-        var subs = service.getSubscriptions()
-            .then(subs => {
-                viewModel = {
-                    subscriptions: subs
-                };
-                ko.applyBindings(viewModel);
-            });
-
-        function saveSubscriptions() {
-            var data = JSON.stringify(viewModel);
-
-            var headers = new Headers();
-            headers.append("Content-Type", "application/json");
-
-            fetch("/api/subscriptions", {
-                method: "POST",
-                body: data,
-                headers
-            }).catch(error => {
-                console.log("Error while saving subscriptions:", error);
-            });
-        }
-    </script>
+    <script src="/scripts/subscriptions.js"></script>
 </body>
 
 </html>
