@@ -5,8 +5,17 @@ var playlistsService = require('./services/youtube-playlists-service');
 var subscriptionsService = require('./services/youtube-subscriptions-service');
 var videosService = require('./services/youtube-videos-service');
 var youtubeVideosFeedingService = require('./services/youtube-videos-feeding-service');
+var feedSchedulingService = require('./services/feed-scheduling-service');
 
 var routesConfig = {};
+
+function sendOkStatus(response) {
+    response.status(200).end();
+}
+
+function sendInternalErrorStatus(response) {
+    response.status(500).end();
+}
 
 function setupAuthorizationUrls(app) {
     app.get('/authorize', (req, res) => {
@@ -40,9 +49,20 @@ function setupApi(app) {
         youtubeVideosFeedingService.feedVideosToPlaylist(playlistId);
     })
 
-    app.post("/api/subscriptions/", (req, res) => {
+    app.post("/api/subscriptions", (req, res) => {
         subscriptionsService.saveSubscriptionsSettings(req.body);
-        res.status(200).end();
+        sendOkStatus(res);
+    });
+
+    app.post("/api/subscriptions/schedule", (req, res) => {
+        feedSchedulingService
+            .saveFeedTimeForPlaylist(req.body.playlistId, req.body.scheduledTime)
+            .then(() => {
+                sendOkStatus(res);
+            })
+            .catch(() => {
+                sendInternalErrorStatus(res);
+            });
     });
 }
 

@@ -8,7 +8,7 @@ function toVideoModel(baseVideo) {
     return {
         'id': baseVideo.id.videoId,
         'name': baseVideo.snippet.title,
-        'publishedAt': baseVideo.snippet.publishedAt
+        'publishedAt': new Date(Date.parse(baseVideo.snippet.publishedAt))
     };
 }
 
@@ -17,7 +17,7 @@ videosService.getLatestVideosFromChannel = function(channelId, maxDate) {
 
     var requestParams = {
         part: 'id,snippet',
-        maxResults: 5,
+        maxResults: 50,
         order: 'date',
         channelId: channelId
     };
@@ -35,10 +35,7 @@ videosService.getLatestVideosFromChannel = function(channelId, maxDate) {
 
                 if (videos) {
                     var data = videos.items.map(toVideoModel);
-                    var filtered = data.filter(x => x.publishedAt >= maxDate);
-                    if (filtered.length > 0) {
-                        console.log("raw data:", data.length, "filtered:", filtered.length);
-                    }
+                    var filtered = data.filter(x => x.publishedAt.getTime() >= maxDate.getTime());
                     resolve(filtered);
                 }
             });

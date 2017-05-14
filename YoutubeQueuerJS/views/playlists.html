@@ -24,38 +24,25 @@
                     <input type="hidden" name="playlistId" data-bind="value: playlistId" />
                 </div>
                 <div class="uk-wdith-1-6">
-                    <button type="submit" class="uk-button uk-button-primary" data-bind="click: feedVideos.bind(null, playlistId)">Add videos to playlist</button>
+                    <button class="uk-button uk-button-primary" data-bind="click: feedVideos">Add videos to playlist</button>
+                </div>
+                <div class="uk-width-1-6">
+                    <div data-bind="if: scheduledTime() === undefined">
+                        <button class="uk-button uk-button-primary" data-bind="click: addScheduledTime">Schedule automatic feed</button>
+                    </div>
+                    <div data-bind="if: scheduledTime() !== undefined">
+                        <select data-bind="options: hours,
+                                          value: scheduledTime, 
+                                          optionsText: function(item) { return (item +':00'); }">
+                        </select>
+                        <button class="uk-button uk-button-primary" data-bind="click: saveScheduledTime">Save scheduled time</button>
+                    </div>
                 </div>
             </div>
         </ul>
     </div>
     <script src="/scripts/playlists-service.js"></script>
-    <script type="text/javascript">
-        var service = new Services.PlaylistsService();
-        function feedVideos(playlistId) {
-            var model = { playlistId };
-
-            var data = JSON.stringify(model);s
-
-            var headers = new Headers();
-            headers.append("Content-Type", "application/json");
-
-            fetch("/api/feedvideos", {
-                method: "POST",
-                body: data,
-                headers
-            }).catch(error => {
-                console.log("Error while feeding videos:", error);
-            });
-        }
-
-        var subs = service.getPlaylists(playlists => {
-            ko.applyBindings({
-                playlists: playlists,
-                feedVideos
-            });
-        });
-    </script>
+    <script src="/scripts/playlists.js"></script>
 </body>
 
 </html>

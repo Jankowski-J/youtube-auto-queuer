@@ -3,6 +3,7 @@ var googleAuth = require('./../google-auth');
 var youtubeServiceProvider = require('./../youtube-service-provider');
 var path = require('path');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 
 var subscriptionsService = {};
 
@@ -54,7 +55,7 @@ function getSubscriptionsCore(subscriptionsSettings, nextPageToken) {
 }
 
 var getSettingsFilePath = function() {
-    return path.join(process.env.APPDATA, '/subscriptions_settings.json')
+    return path.join(process.env.APPDATA, '/YoutubeQueuer/subscriptions_settings.json')
 };
 
 var saveSubscriptionsSettings = function(settings) {
@@ -62,10 +63,17 @@ var saveSubscriptionsSettings = function(settings) {
     var serialized = JSON.stringify(filtered);
     var filePath = getSettingsFilePath();
 
-    fs.writeFile(filePath, serialized, error => {
-        if (error) {
-            console.log('An error has occured while saving subscriptions settings:', error);
+    var pathName = path.dirname(filePath);
+    fs.exists(pathName, exists => {
+        if (!exists) {
+             mkdirp.sync(pathName);
         }
+               
+        fs.writeFile(filePath, serialized, error => {
+            if (error) {
+                console.log('An error has occured while saving subscriptions settings:', error);
+            }
+        })
     });
 };
 

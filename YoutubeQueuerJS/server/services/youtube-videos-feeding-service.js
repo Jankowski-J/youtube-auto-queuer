@@ -4,7 +4,7 @@ var videosService = require('./youtube-videos-service');
 
 var youtubeVideosFeedingService = {};
 
-function toVideoFeedingPromise(sub) {
+function toVideoFeedingPromise(sub, playlistId) {
     return function() {
         return videosService.getLatestVideosFromChannel(sub.channelId)
             .then(videos => {
@@ -21,7 +21,7 @@ function feedVideosToPlaylist(playlistId) {
         .then(subs => {
             var validSubs = subs.filter(s => s.isIncluded);
 
-            var promises = validSubs.map(toVideoFeedingPromise);
+            var promises = validSubs.map(s => toVideoFeedingPromise(s, playlistId));
 
             promises.reduce((cur, next) => {
                 return cur.then(next);

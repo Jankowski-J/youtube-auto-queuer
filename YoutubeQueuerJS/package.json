@@ -4,7 +4,7 @@
   "description": "A utility for automated adding of videos from subscriptions to playlists.",
   "main": "server/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jasmine",
     "start": "node server/main.js",
     "start:alt": "nodejs server/main.js"
   },
@@ -14,6 +14,10 @@
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
-    "googleapis": "^18.0.0"
+    "googleapis": "^18.0.0",
+    "mkdirp": "^0.5.1"
+  },
+  "devDependencies": {
+    "jasmine-core": "^2.6.1"
   }
 }
